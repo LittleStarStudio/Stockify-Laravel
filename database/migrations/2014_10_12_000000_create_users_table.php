@@ -15,10 +15,19 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+
+            // User Role
+            $table->enum('role', ['admin', 'manajer_gudang', 'staff_gudang'])->default('staff_gudang');
+
+            // Untuk system approval
+            $table->enum('approval_status', ['pending', 'active', 'rejected'])->default('pending');
+
             $table->rememberToken();
             $table->timestamps();
+
+            // Untuk Soft Delete
+            $table->softDeletes();
         });
     }
 
