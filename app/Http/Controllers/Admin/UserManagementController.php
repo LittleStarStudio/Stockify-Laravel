@@ -6,102 +6,143 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class UserManagementController extends Controller
 {
 
-    //Menampilkan semua daftar user (kecuali admin)
-    public function index()
-    {
-        $users = User::withTrashed()
-            ->where('approval_status', '!=', 'pending')
+    // --- Menampilakan data user di halaman Users Management ---
+    public function index() {
+
+        // Menampilkan users yang active dan rejected saja (users pending tidak dimasukkan)
+        $users = User::where('approval_status', '!=', 'pending')
+            ->whereNull('deleted_at')
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('admin.users-management.index', compact('users'));
+        // Menampilakan users yang telah di deleted saja menggunakan soft delete (khusus untuk nanti di modal Bin)
+        $trashedUsers = User::onlyTrashed()
+            ->orderBy('deleted_at', 'desc')
+            ->get();
+
+        return view('admin.users-management.index', compact('users', 'trashedUsers'));
     }
 
 
-    // Membuat data user baru (oleh admin)
-    public function store(Request $request)
-    {
-        // Validasi input
+    // --- Membuat user baru ---
+    public function store(Request $request) {
+
+        // Validasi request data baru yang akan dibuat
         $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:users,email',
-            'password' => 'required|min:6',
-            'role'     => 'required|in:manajer_gudang,staff_gudang',
+            'name'     => ['required', 'string', 'max:255'],
+            'email'    => ['required', 'email', 'unique:users,email'],
+            'password' => ['required', 'min:6'],
+            'role'     => ['required', Rule::in(['admin', 'manajer_gudang', 'staff_gudang'])],
+            'avatar'   => ['nullable', 'image', 'max:2048'],
         ]);
 
-        // Memasukkan input ke database
+        // Untuk avatar users secara default kondisi awalnya akan null
+        $avatarPath = null;
+
+        // Dan jika users mau memasukkan foto avatarnya, maka baru akan kita simpankan
+        if ($request->hasFile('avatar')) {
+            $avatarPath = $request->file('avatar')->store('avatars', 'public');
+        }
+
+        // Kemudian baru terakhir kita buat dan masukkan semua data yang direquest
         User::create([
             'name'            => $request->name,
             'email'           => $request->email,
             'password'        => Hash::make($request->password),
             'role'            => $request->role,
-            'approval_status' => 'active', // admin create = langsung aktif
+            'avatar'          => $avatarPath,
+            'approval_status' => 'active' // Langsung active karena dibuat langsung oleh admin
         ]);
 
-        return back()->with('success', 'User berhasil ditambahkan.');
+        return back()->with('success', 'User berhasil ditambahkan');
     }
 
-    // Mengupdate data user (oleh admin)
-    public function update(Request $request, User $user)
-    {
-        // Proteksi jika bukan admin
+
+    // --- Update data user ---
+    public function update(Request $request, User $user) {
+
+        // Admin tidak boleh di edit
         if ($user->role === 'admin') {
             abort(403);
         }
 
-        // Validasi input
+        // Validasi request untuk edit data
         $request->validate([
-            'name'  => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'role'  => 'required|in:manajer_gudang,staff_gudang',
-            'password' => 'nullable|min:6',
+            'name'  => ['required', 'string', 'max:255'],
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users', 'email')->ignore($user->id),
+            ],
+            'role'     => ['required', Rule::in(['admin', 'manajer_gudang', 'staff_gudang'])],
+            'password' => ['nullable', 'min:6'],
+            'avatar'   => ['nullable', 'image', 'max:2048'],
         ]);
 
+        // Data data yang akan langsung dimasukkan secara default jika collum password dan avatar tidak di isi (karena opsional)
         $data = $request->only('name', 'email', 'role');
 
-        // Jika admin membuatkan password baru
+        // Jika menambahkan update password juga maka akan ditambahkan juga
         if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
         }
 
-        // Memasukkan input ke database
+        // Jika menambahkan update foto avatar juga maka akan ditambahkan juga
+        if ($request->hasFile('avatar')) {
+            $data['avatar'] = $request->file('avatar')->store('avatars', 'public');
+        }
+
+        // Baru kita masukkan update data nya user
         $user->update($data);
 
-        return back()->with('success', 'User berhasil diperbarui.');
+        return back()->with('success', 'User berhasil diperbarui');
     }
 
-    // Menghapus data user (oleh admin + soft delete)
-    public function destroy(User $user)
-    {
-        // Proteksi jika bukan admin
+
+    // --- Delete data user (soft delete) ---
+    public function destroy(User $user) {
+
+        // Validasi dan dicek dulu aksi delete yang akan dilakukan
+
+        // Admin tidak boleh hapus data admin lain
         if ($user->role === 'admin') {
             abort(403);
         }
 
-        // Hapus data (Soft delete)
+        // Tidak boleh hapus data diri sendiri (Admin => hapus datanya sendiri)
+        if (auth()->id() === $user->id) {
+            return back()->with('error', 'Anda tidak bisa menghapus akun diri sendiri');
+        }
+
+        // Jika sudah aman
+        // Baru bisa delete data user
         $user->delete();
 
-        return back()->with('success', 'User berhasil dihapus.');
+        return back()->with('success', 'User berhasil dihapus');
     }
 
-    // Merestore data user yang dihapus (dari soft delete)
-    public function restore($id)
-    {
-        // Cari user termasuk yang di soft delete
-        $user = User::withTrashed()->findOrFail($id);
 
-        // Proteksi jika bukan admin
+    // --- Restore data user (dari soft delete di bin) ---
+    public function restore($id) {
+
+        // Ambil semua data user yang di soft delete
+        $user = User::onlyTrashed()->findOrFail($id);
+
+        // Tidak boleh restore admin
         if ($user->role === 'admin') {
             abort(403);
         }
 
-        // Restore data user
+        // Baru bisa restore data yang di soft delete tadi
         $user->restore();
 
-        return back()->with('success', 'User berhasil direstore.');
+        return back()->with('success', 'User berhasil direstore');
     }
+
+
 }

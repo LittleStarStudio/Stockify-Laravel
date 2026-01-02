@@ -55,21 +55,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
-    <script>
-        document.addEventListener('click', function (e) {
-            if (e.target.classList.contains('btn-confirm')) {
-                confirmAction({
-                    title: e.target.dataset.title,
-                    text: e.target.dataset.text,
-                    icon: e.target.dataset.icon,
-                    confirmText: e.target.dataset.confirm,
-                    confirmColor: e.target.dataset.color,
-                    form: e.target.closest('form')
-                });
-            }
-        });
-    </script>
-
+    
     {{-- Flash Alert Global --}}
     <x-flash-alert />
 

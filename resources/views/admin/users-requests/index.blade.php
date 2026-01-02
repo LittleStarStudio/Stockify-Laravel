@@ -75,7 +75,7 @@
                         </td>
 
                         {{-- Action --}}
-                        <td class="px-6 py-4 space-x-2 text-center col-action">
+                        <td class="px-5 py-4 space-x-2 text-center col-action">
                             @if ($user->approval_status === 'pending')
 
                                 {{-- Approve --}}
