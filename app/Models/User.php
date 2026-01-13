@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -30,6 +31,7 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+
     // Role helpers
     public function isAdmin(): bool
     {
@@ -46,7 +48,8 @@ class User extends Authenticatable
         return $this->role === 'staff_gudang';
     }
 
-    // Approval helpers
+
+    // Status helpers
     public function isActive(): bool
     {
         return $this->approval_status === 'active';
@@ -61,4 +64,22 @@ class User extends Authenticatable
     {
         return $this->approval_status === 'rejected';
     }
+
+    public function isDeleted(): bool
+    {
+        return $this->trashed();
+    }
+
+
+    // Avatar accessor
+    public function getAvatarUrlAttribute(): string
+    {
+        if ($this->avatar && Storage::disk('public')->exists($this->avatar)) {
+            return asset('storage/' . $this->avatar);
+        }
+
+        return asset('images/avatar-default.png');
+    }
+
+
 }

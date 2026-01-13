@@ -16,31 +16,33 @@
 
 </head>
 
-<body class="font-sans antialiased bg-neutral-primary-soft">
+<body class="font-sans antialiased bg-neutral-primary-soft min-h-screen">
 
     {{-- Navbar & Sidebar  Start--}}
-    {{-- @include('layouts.navigation') --}}
-
     @include('layouts.partials.navbar')
     @include('layouts.partials.sidebar')
     {{-- Navbar & Sidebar  End--}}
 
+    <!-- Wrapper Content + Footer -->
+    <div class="flex min-h-screen">
 
-    {{-- Main Content Start --}}
-    <main class="p-4 mt-14 sm:ml-64">
+        <!-- Offset Area (kanan sidebar) -->
+        <div class="flex flex-col flex-1 ml-0 sm:ml-64">
 
-        {{-- Content Start--}}
-        @yield('content')
-        {{-- Content End--}}
+            {{-- Main Content Start --}}
+            <main class="flex-1 mt-14 px-6 py-6">
+                @yield('content')
+            </main>
+            {{-- Main Content End --}}
 
-        {{-- Footer Start--}}
-        @include('layouts.partials.footer')
-        {{-- Footer End--}}
+            
+            {{-- Footer Start--}}
+                @include('layouts.partials.footer')
+            {{-- Footer End--}}
 
-    </main>
-    {{-- Main Content End --}}
+        </div>
 
-
+    </div>
 
 
 

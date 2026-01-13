@@ -1,6 +1,6 @@
-<footer class="bg-[#E1EFFE] border-t border-sky-300 mt-auto">
-    <div class="max-w-screen-xl px-4 py-4 mx-auto">
-        <div class="flex flex-col items-center justify-between gap-2 sm:flex-row">
+<footer class="bg-[#E1EFFE] border-t border-sky-300 mt-16 mr-1 ml-1">
+    <div class="max-w-screen-xl px-6 py-6 mx-auto">
+        <div class="flex flex-col items-center justify-between gap-3 sm:flex-row">
 
             <span class="text-sm text-sky-500">
                 © {{ date('Y') }}

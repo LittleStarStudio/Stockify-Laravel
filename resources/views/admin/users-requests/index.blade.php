@@ -22,8 +22,9 @@
 
             {{-- Table Head --}}
             <thead class="font-semibold bg-gray-100 border-b border-gray-300">
+
                 <tr>
-                    <th class="px-6 py-3">No</th>
+                    <th class="px-6 py-3 text-center col-action">No</th>
                     <th class="px-6 py-3">Name</th>
                     <th class="px-6 py-3">Email</th>
                     <th class="px-6 py-3">Role</th>
@@ -38,9 +39,7 @@
                     <tr class="border-b hover:bg-gray-50">
 
                         {{-- No --}}
-                        <td class="px-6 py-4 font-medium text-gray-900">
-                            {{ $loop->iteration }}
-                        </td>
+                        <td class="px-6 py-4 font-medium text-gray-900 text-center"></td>
 
                         {{-- Name --}}
                         <td class="px-6 py-4 font-medium text-gray-900">
@@ -85,13 +84,13 @@
                                     @csrf
                                     <button
                                         type="button"
-                                        class="btn-confirm inline-flex items-center px-2 py-1.5 text-xs font-semibold
+                                        class="btn-request-confirm inline-flex items-center px-2 py-1.5 text-xs font-semibold
                                                text-white bg-green-600 rounded hover:bg-green-700
                                                focus:outline-none focus:ring-2 focus:ring-green-300"
-                                        data-title="Approve User?"
-                                        data-text="User ini akan langsung aktif."
+                                        data-title="Approve User ?"
+                                        data-text="This user will be immediately active"
                                         data-icon="question"
-                                        data-confirm="Ya, Approve"
+                                        data-confirm="Yes, Approve It"
                                         data-color="#16a34a">
                                         Approve
                                     </button>
@@ -104,13 +103,13 @@
                                     @csrf
                                     <button
                                         type="button"
-                                        class="btn-confirm inline-flex items-center px-2 py-1.5 text-xs font-semibold
+                                        class="btn-request-confirm inline-flex items-center px-2 py-1.5 text-xs font-semibold
                                                text-white bg-red-600 rounded hover:bg-red-700
                                                focus:outline-none focus:ring-2 focus:ring-red-300"
-                                        data-title="Reject User?"
-                                        data-text="User ini akan ditolak."
+                                        data-title="Reject User ?"
+                                        data-text="This user will be rejected"
                                         data-icon="warning"
-                                        data-confirm="Ya, Reject"
+                                        data-confirm="Yes, Reject It"
                                         data-color="#dc2626">
                                         Reject
                                     </button>
@@ -119,10 +118,13 @@
                             @else
                                 <span class="text-xs italic text-gray-400">No action</span>
                             @endif
+                            
                         </td>
 
                     </tr>
+
                 @endforeach
+
             </tbody>
 
         </table>
@@ -133,7 +135,7 @@
 <x-datatable-init
     id="usersRequestTable"
     :columnDefs="[
-        ['orderable' => false, 'targets' => [5]]
+        ['orderable' => false, 'targets' => [0, 5]]
     ]"
 />
 

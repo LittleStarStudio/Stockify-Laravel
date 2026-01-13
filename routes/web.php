@@ -61,10 +61,17 @@ Route::middleware(['auth', 'approved', 'admin'])
             Route::put('users-management/{user}', 'update')->name('users-management.update');
             Route::delete('users-management/{user}', 'destroy')->name('users-management.destroy');
 
+            // Bin (Soft Deleted Users)
+            Route::get(
+                'users-management/bin', 
+                [UserManagementController::class, 'bin']
+            )->name('users-management.bin');
+
             // Restore dari Bin
             Route::post(
                 'users-management/{id}/restore',
-                'restore'
+                [UserManagementController::class, 'restore']
             )->name('users-management.restore');
+            
         });
     });
