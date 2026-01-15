@@ -7,7 +7,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         if (typeof $ === 'undefined' || !$.fn.DataTable) {
-            console.error('DataTables / jQuery belum ter-load');
+            console.error('DataTables / jQuery not loaded');
             return;
         }
 

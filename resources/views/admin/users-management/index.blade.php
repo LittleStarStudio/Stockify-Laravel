@@ -13,6 +13,9 @@
             <h1 class="text-2xl font-semibold text-black">
                 User Management
             </h1>
+            <p class="text-sm text-gray-600 mt-1">
+                Manage your users
+            </p>
         </div>
 
         <!-- Action Buttons -->
@@ -23,7 +26,10 @@
                 <button
                     type="button"
                     data-modal-target="createUserModal"
-                    class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700">
+                    class="inline-flex items-center gap-2 px-4 py-2
+                            text-sm font-medium text-white
+                            bg-blue-600 rounded-md
+                            hover:bg-blue-700 transition">
 
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24">
                         <path stroke="currentColor" stroke-width="2" d="M5 12h14m-7 7V5"/>
@@ -35,7 +41,10 @@
                 <button
                     type="button"
                     id="btn-open-bin"
-                    class="px-4 py-2 bg-gray-600 text-white rounded">
+                    class="inline-flex items-center gap-2 px-4 py-2
+                            text-sm font-medium text-white
+                            bg-gray-600 rounded-md
+                            hover:bg-gray-700 transition">
 
                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24">
                         <path stroke="currentColor" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"/>
@@ -70,21 +79,21 @@
                 class="w-full text-sm text-left text-black border-collapse table-crud">
 
                 <!-- Table Head -->
-                <thead class="font-semibold bg-gray-100 border-b">
-                    <tr>
-                        <th class="px-5 py-4 text-center col-action">No</th>
-                        <th class="px-5 py-4">User</th>
-                        <th class="px-5 py-4">Email</th>
-                        <th class="px-5 py-4">Role</th>
-                        <th class="px-5 py-4">Status</th>
-                        <th class="px-5 py-4 text-center col-action">Action</th>
+                <thead class="bg-blue-600 text-white border-b border-blue-700">
+                    <tr class="uppercase tracking-wide text-xs font-semibold">
+                        <th class="px-5 py-4 text-xs font-semibold text-white text-center col-action">No</th>
+                        <th class="px-5 py-4 text-xs font-semibold text-white">User</th>
+                        <th class="px-5 py-4 text-xs font-semibold text-white">Email</th>
+                        <th class="px-5 py-4 text-xs font-semibold text-white">Role</th>
+                        <th class="px-5 py-4 text-xs font-semibold text-white">Status</th>
+                        <th class="px-5 py-4 text-xs font-semibold text-white text-center col-action">Action</th>
                     </tr>
                 </thead>
 
                 <!-- Table Body -->
                 <tbody>
                     @forelse ($users as $user)
-                        <tr class="border-b hover:bg-gray-100">
+                        <tr class="border-b hover:bg-gray-100 transition">
 
                             <!-- No -->
                             <td class="px-5 py-4 text-center"></td>
@@ -163,7 +172,7 @@
                                         <!-- TOGGLE -->
                                         <button
                                             type="button"
-                                            class="action-toggle inline-flex items-center gap-1 px-3 py-1 text-sm font-medium text-gray-700 border rounded hover:bg-gray-100">
+                                            class="action-toggle inline-flex items-center gap-1 px-3 py-1.5 text-xs bg-gray-100 text-gray-700 rounded hover:bg-gray-200">
                                             Actions
 
                                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24">

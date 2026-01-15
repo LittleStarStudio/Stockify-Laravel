@@ -1,9 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\UserRequestController;
 use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\Admin\SupplierController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,7 +38,6 @@ Route::middleware('auth')->group(function () {
 require __DIR__ . '/auth.php';
 
 
-
 // Admin routes
 Route::middleware(['auth', 'approved', 'admin'])
     ->prefix('admin')
@@ -51,7 +52,6 @@ Route::middleware(['auth', 'approved', 'admin'])
             Route::post('user-requests/{user}/reject', 'reject')->name('user-requests.reject');
         });
 
-
         // User Management (CRUD)
         Route::controller(UserManagementController::class)->group(function () {
 
@@ -62,16 +62,26 @@ Route::middleware(['auth', 'approved', 'admin'])
             Route::delete('users-management/{user}', 'destroy')->name('users-management.destroy');
 
             // Bin (Soft Deleted Users)
-            Route::get(
-                'users-management/bin', 
-                [UserManagementController::class, 'bin']
-            )->name('users-management.bin');
+            Route::get('users-management/bin', [UserManagementController::class, 'bin'])->name('users-management.bin');
 
             // Restore dari Bin
-            Route::post(
-                'users-management/{id}/restore',
-                [UserManagementController::class, 'restore']
-            )->name('users-management.restore');
-            
+            Route::post('users-management/{id}/restore', [UserManagementController::class, 'restore'])->name('users-management.restore');
         });
+
+        // Supplier Management
+        Route::controller(SupplierController::class)->group(function () {
+
+            // Main CRUD
+            Route::get('suppliers-management', 'index')->name('suppliers-management.index');
+            Route::post('suppliers-management', 'store')->name('suppliers-management.store');
+            Route::put('suppliers-management/{supplier}', 'update')->name('suppliers-management.update');
+            Route::delete('suppliers-management/{supplier}', 'destroy')->name('suppliers-management.destroy');
+
+            // Bin (Soft Deleted Suppliers)
+            Route::get('suppliers-management/bin', 'bin')->name('suppliers-management.bin');
+
+            // Restore dari Bin
+            Route::post('suppliers-management/{id}/restore', 'restore')->name('suppliers-management.restore');
+        });
+
     });

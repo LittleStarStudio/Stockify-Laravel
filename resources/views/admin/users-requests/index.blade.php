@@ -12,6 +12,9 @@
             <h1 class="text-2xl font-semibold text-black">
                 Users Request
             </h1>
+            <p class="text-sm text-gray-600 mt-1">
+                Manage your users request
+            </p>
         </div>
     </div>
 
@@ -21,22 +24,22 @@
         <table id="usersRequestTable" class="w-full text-sm text-left text-black border-collapse table-crud">
 
             {{-- Table Head --}}
-            <thead class="font-semibold bg-gray-100 border-b border-gray-300">
+            <thead class="bg-blue-600 text-white border-b border-blue-700">
 
-                <tr>
-                    <th class="px-6 py-3 text-center col-action">No</th>
-                    <th class="px-6 py-3">Name</th>
-                    <th class="px-6 py-3">Email</th>
-                    <th class="px-6 py-3">Role</th>
-                    <th class="px-6 py-3">Status</th>
-                    <th class="px-6 py-3 text-center col-action">Action</th>
+                <tr class="uppercase tracking-wide text-xs font-semibold">
+                    <th class="px-5 py-4 text-xs font-semibold text-white text-center col-action">No</th>
+                    <th class="px-5 py-4 text-xs font-semibold text-white">Name</th>
+                    <th class="px-5 py-4 text-xs font-semibold text-white">Email</th>
+                    <th class="px-5 py-4 text-xs font-semibold text-white">Role</th>
+                    <th class="px-5 py-4 text-xs font-semibold text-white">Status</th>
+                    <th class="px-5 py-4 text-xs font-semibold text-white text-center col-action">Action</th>
                 </tr>
             </thead>
 
             {{-- Table Body --}}
             <tbody>
                 @foreach ($users as $user)
-                    <tr class="border-b hover:bg-gray-50">
+                    <tr class="border-b hover:bg-gray-100 transition">
 
                         {{-- No --}}
                         <td class="px-6 py-4 font-medium text-gray-900 text-center"></td>

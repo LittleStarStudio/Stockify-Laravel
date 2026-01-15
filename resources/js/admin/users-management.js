@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // MEMASTIKAN JQUERY
     if (typeof window.$ === "undefined" || !$.fn || !$.fn.DataTable) {
-        console.warn("jQuery / DataTable belum tersedia");
+        console.warn("jQuery / DataTable has not been loaded");
         return;
     }
 
@@ -323,7 +323,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
     }
-
 
     // GLOBAL CLICK HANDLER
     document.addEventListener("click", async (e) => {
