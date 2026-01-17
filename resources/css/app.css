@@ -35,6 +35,28 @@
     cursor: default;
 }
 
+/* Memberi warna baris saat di hover */
+.table-crud tbody tr:hover {
+    background-color: #f9fafb;
+}
+
+/* Animasi dropdown action */
+.action-menu {
+    transform-origin: top right;
+    animation: dropdownFade 0.15s ease-out;
+}
+
+@keyframes dropdownFade {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
 
 /* ================================
    DATATABLES UI SPACING

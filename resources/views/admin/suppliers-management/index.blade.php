@@ -27,9 +27,12 @@
                 type="button"
                 id="btnAddSupplier"
                 class="inline-flex items-center gap-2 px-4 py-2
-                       text-sm font-medium text-white
-                       bg-blue-600 rounded-md
-                       hover:bg-blue-700 transition">
+                        text-sm font-medium text-white
+                        bg-blue-600 rounded-md
+                        hover:bg-blue-700
+                        focus:outline-none focus:ring-2 focus:ring-blue-400
+                        active:scale-[0.98]
+                        transition">
 
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24">
                     <path stroke="currentColor" stroke-width="2"
@@ -79,7 +82,7 @@
 
                 <!-- Table Body -->
                 <tbody>
-                    @forelse ($suppliers as $supplier)
+                    @foreach ($suppliers as $supplier)
                         <tr class="border-b hover:bg-gray-100 transition">
 
                             <!-- No -->
@@ -126,11 +129,26 @@
                                     <div class="action-menu hidden absolute right-0 top-full mt-2
                                                 w-44 bg-white border rounded-lg shadow-lg z-50">
 
+
+                                        <!-- DATA MODAL PAYLOAD -->
+                                        @php
+                                            $viewSupplierPayload = [
+                                                "id" => $supplier->id,
+                                                "name" => $supplier->name,
+                                                "email" => $supplier->email,
+                                                "phone" => $supplier->phone,
+                                                "address" => $supplier->address,
+                                                "created_at" => $supplier->created_at?->format('d M Y H:i'),
+                                                "updated_at" => $supplier->updated_at?->format('d M Y H:i'),
+                                            ];
+                                        @endphp
+
                                         <!-- VIEW -->
                                         <button
                                             type="button"
+                                            data-action="view"
                                             class="flex w-full items-center gap-2 px-4 py-2 text-sm text-blue-600 hover:bg-blue-50"
-                                            data-supplier='@json($supplier)'>
+                                            data-supplier='@json($viewSupplierPayload)'>
 
                                             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24">
                                                     <path stroke="currentColor" stroke-width="2"
@@ -146,6 +164,7 @@
                                         <!-- EDIT -->
                                         <button
                                             type="button"
+                                            data-action="edit"
                                             class="flex w-full items-center gap-2 px-4 py-2 text-sm text-yellow-600 hover:bg-yellow-50"
                                             data-supplier='@json($supplier)'>
 
@@ -167,8 +186,7 @@
 
                                             <button
                                                 type="button"
-                                                class="btn-confirm block w-full text-left px-3 py-2 text-xs
-                                                    text-red-600 hover:bg-red-50"
+                                                class="btn-confirm flex w-full items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50"
                                                 data-title="Delete supplier?"
                                                 data-text="Supplier will be moved to Bin"
                                                 data-confirm="Yes, Delete"
@@ -191,14 +209,8 @@
                             
 
                         </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6"
-                                class="px-6 py-8 text-center text-gray-500 italic">
-                                No suppliers found.
-                            </td>
-                        </tr>
-                    @endforelse
+                    
+                    @endforeach
                     
                 </tbody>
 

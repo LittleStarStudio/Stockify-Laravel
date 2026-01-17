@@ -92,7 +92,7 @@
 
                 <!-- Table Body -->
                 <tbody>
-                    @forelse ($users as $user)
+                    @foreach ($users as $user)
                         <tr class="border-b hover:bg-gray-100 transition">
 
                             <!-- No -->
@@ -282,18 +282,10 @@
 
                                 @endif
 
-
                             </td>
                         </tr>
 
-                    @empty
-                        <tr>
-                            <td colspan="6"
-                                class="px-6 py-8 text-center text-gray-500 italic">
-                                {{ $isTrash ? 'No deleted users found.' : 'No users found.' }}
-                            </td>
-                        </tr>
-                    @endforelse
+                    @endforeach
                 </tbody>
 
             </table>

@@ -50,14 +50,22 @@
                 <div class="px-6 py-4 border-t flex justify-end gap-2">
                     <button data-modal-close
                             type="button"
-                            class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">
+                            class="px-4 py-2 text-sm font-medium 
+                                bg-gray-200 rounded-md
+                                hover:bg-gray-300
+                                disabled:opacity-50 disabled:cursor-not-allowed
+                                transition">
                         Cancel
                     </button>
 
                     <button
                         type="button"
                         id="btn-save-create-supplier"
-                        class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                        class="px-4 py-2 text-sm font-medium text-white
+                            bg-blue-600 rounded-md
+                            hover:bg-blue-700
+                            disabled:opacity-50 disabled:cursor-not-allowed
+                            transition">
                         Save
                     </button>
                 </div>

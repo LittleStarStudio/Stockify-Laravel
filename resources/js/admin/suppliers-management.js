@@ -71,6 +71,21 @@ document.addEventListener("DOMContentLoaded", () => {
             })
             .draw();
     }
+
+    // FORMAT WAKTU
+    function formatDate(dateString) {
+        if (!dateString) return "-";
+
+        const d = new Date(dateString);
+
+        return d.toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
+        });
+    }
     
     // RENDER ROW 
     function renderSupplierRow(supplier) {
@@ -81,7 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
             supplier.phone ?? "-",
             supplier.email ?? "-",
             `
-            <div class="relative inline-block text-left">
+            <div class="relative inline-block text-left" data-supplier-id="${supplier.id}">
                 <button type="button"
                     class="action-toggle inline-flex items-center gap-1
                         px-3 py-1.5 text-xs font-medium
@@ -134,8 +149,13 @@ document.addEventListener("DOMContentLoaded", () => {
         let exists = false;
 
         suppliersManagementDataTable.rows().every(function () {
-            const actionHtml = this.data()[5]; // kolom Action
-            if (actionHtml.includes(`/suppliers-management/${id}`)) {
+
+            const row = this.node(); 
+            const wrapper = row.querySelector('[data-supplier-id]');
+
+            if (!wrapper) return;
+
+            if (String(wrapper.dataset.supplierId) === String(id)) {
                 exists = true;
                 return false;
             }
@@ -190,7 +210,13 @@ document.addEventListener("DOMContentLoaded", () => {
             form.reset();
 
         } catch (err) {
-            Swal.fire("Error", Object.values(err.errors ?? {}).join("<br>"), "error");
+            Swal.fire(
+                "Validation Error",
+                err.errors
+                    ? Object.values(err.errors).map(e => e[0]).join("<br>")
+                    : (err.message || "Unknown error"),
+                "error"
+            );
         } finally {
             btnCreate.disabled = false;
             btnCreate.textContent = "Save";
@@ -225,19 +251,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
             Swal.fire("Success", data.message, "success");
 
-            suppliersManagementDataTable.rows().every(function () {
-                if (this.data()[1] === data.supplier.id) {
-                    this.data(renderSupplierRow(data.supplier));
-                    return false;
-                }
-            });
+            suppliersManagementDataTable
+                .row($('.btn-edit[data-supplier*="\"id\":' + data.supplier.id + '"]').closest('tr'))
+                .data(renderSupplierRow(data.supplier))
+                .draw(false);
 
             suppliersManagementDataTable.draw(false);
             refreshNumbering();
             closeModal(document.getElementById("editSupplierModal"));
 
         } catch (err) {
-            Swal.fire("Error", Object.values(err.errors ?? {}).join("<br>"), "error");
+            Swal.fire(
+                "Validation Error",
+                err.errors
+                    ? Object.values(err.errors).map(e => e[0]).join("<br>")
+                    : (err.message || "Unknown error"),
+                "error"
+            );
         } finally {
             btnSaveEdit.disabled = false;
             btnSaveEdit.textContent = "Save Changes";
@@ -265,37 +295,57 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
 
                 binSuppliersDataTable = $("#binSuppliersTable").DataTable({
-                    data: suppliers,
-                    autoWidth: false,
-                    columns: [
-                        { data: null, className: "text-center" },
-                        { data: "name" },
-                        { data: "email" },
-                        { data: "phone" },
-                        {
-                            data: "deleted_at",
-                            render: d => new Date(d).toLocaleString()
-                        },
-                        {
-                            data: "id",
-                            orderable: false,
-                            className: "text-center",
-                            render: id => `
-                                <form action="/admin/suppliers-management/${id}/restore" method="POST">
-                                    <input type="hidden" name="_token" value="${csrfToken}">
-                                    <button type="button"
-                                        class="btn-confirm px-3 py-1.5 rounded-md text-white bg-slate-800 hover:bg-slate-900 transition"
-                                        data-title="Restore supplier?"
-                                        data-text="Supplier will be restored"
-                                        data-confirm="Yes, Restore"
-                                        data-color="#2563eb">
-                                        Restore
-                                    </button>
-                                </form>
-                            `
-                        }
-                    ]
-                });
+                data: suppliers,
+                autoWidth: false,
+                pageLength: 10,
+                lengthChange: false, 
+                responsive: true,
+                order: [],
+
+                columns: [
+                    { data: null, className: "text-center" }, 
+                    { data: "name" },
+                    { data: "email" },
+                    { data: "phone" },
+                    {
+                        data: "deleted_at",
+                        render: d => formatDate(d) 
+                    },
+                    {
+                        data: "id",
+                        orderable: false,
+                        className: "text-center",
+                        render: id => `
+                            <form action="/admin/suppliers-management/${id}/restore" method="POST">
+                                <input type="hidden" name="_token" value="${csrfToken}">
+                                <button type="button"
+                                    class="btn-confirm px-3 py-1.5 rounded-md
+                                        text-white bg-slate-800 hover:bg-slate-900 transition"
+                                    data-title="Restore supplier?"
+                                    data-text="Supplier will be restored"
+                                    data-confirm="Yes, Restore"
+                                    data-color="#2563eb">
+                                    Restore
+                                </button>
+                            </form>
+                        `
+                    }
+                ],
+
+                columnDefs: [
+                    { orderable: false, targets: [0, 5] } 
+                ],
+
+                language: {
+                    search: "Search:",
+                    info: "Showing _START_ - _END_ of _TOTAL_ data",
+                    emptyTable: "No deleted suppliers found",
+                    paginate: {
+                        previous: "‹",
+                        next: "›"
+                    }
+                }
+            });
 
                 // numbering
                 binSuppliersDataTable
@@ -343,7 +393,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         // VIEW
-        const viewBtn = e.target.closest(".btn-view");
+        const viewBtn = e.target.closest("[data-action='view']");
+
         if (viewBtn) {
             closeAllActionMenus();
 
@@ -352,13 +403,16 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("view-email").textContent = s.email ?? "-";
             document.getElementById("view-phone").textContent = s.phone ?? "-";
             document.getElementById("view-address").textContent = s.address ?? "-";
+            document.getElementById("view-created").textContent = s.created_at ?? "-";
+            document.getElementById("view-updated").textContent = s.updated_at ?? "-";
 
             openModal(document.getElementById("viewSupplierModal"));
             return;
         }
 
         // EDIT
-        const editBtn = e.target.closest(".btn-edit");
+        const editBtn = e.target.closest("[data-action='edit']");
+
         if (editBtn) {
             closeAllActionMenus();
 
@@ -375,7 +429,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // DELETE / RESTORE
+        // DELETE & RESTORE
         const confirmBtn = e.target.closest(".btn-confirm");
         if (!confirmBtn) return;
 

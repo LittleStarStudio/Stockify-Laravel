@@ -79,6 +79,21 @@ document.addEventListener("DOMContentLoaded", () => {
             .forEach(menu => menu.classList.add("hidden"));
     }
 
+    // FORMAT WAKTU
+    function formatDate(dateString) {
+        if (!dateString) return "-";
+
+        const d = new Date(dateString);
+
+        return d.toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+            hour: "2-digit",
+            minute:  "2-digit"
+        });
+    }
+
     function openModal(modal) {
         if (!modal) return;
 
@@ -248,7 +263,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         { data: 'email' },
                         {
                             data: 'deleted_at',
-                            render: data => new Date(data).toLocaleString()
+                            render: data => formatDate(data)
                         },
                         {
                             data: 'id',

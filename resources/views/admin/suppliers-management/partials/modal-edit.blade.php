@@ -11,15 +11,17 @@
                transform -translate-y-6 opacity-0 transition-all duration-300">
 
         {{-- HEADER --}}
-        <div class="flex items-center justify-between px-6 py-4 bg-blue-600 rounded-t-lg">
-            <h2 class="text-lg font-semibold text-white">
+        <div class="flex items-center justify-between px-6 py-4 bg-yellow-500 text-white rounded-t-lg">
+            <h2 class="text-lg font-semibold">
                 Edit Supplier
             </h2>
 
             <button
                 type="button"
                 data-modal-close
-                class="text-white hover:text-gray-200 transition">
+                class="absolute top-0 right-0 w-12 h-12
+                    flex items-center justify-center
+                    hover:bg-red-500 transition rounded-tr-lg">
                 ✕
             </button>
         </div>
@@ -92,7 +94,11 @@
                 type="button"
                 data-modal-close
                 class="px-4 py-2 text-sm font-medium text-gray-700
-                       bg-gray-100 rounded-md hover:bg-gray-200 transition">
+                    bg-gray-200 
+                    rounded-md
+                    hover:bg-gray-300
+                    disabled:opacity-50 disabled:cursor-not-allowed
+                    transition">
                 Cancel
             </button>
 
@@ -100,8 +106,11 @@
                 type="button"
                 id="btn-save-edit-supplier"
                 class="px-4 py-2 text-sm font-medium text-white
-                       bg-blue-600 rounded-md hover:bg-blue-700 transition">
-                Save Changes
+                    bg-yellow-500 rounded-md
+                    hover:bg-yellow-600
+                    disabled:opacity-50 disabled:cursor-not-allowed
+                    transition">
+                Save
             </button>
 
         </div>

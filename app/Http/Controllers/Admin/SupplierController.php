@@ -7,6 +7,9 @@ use App\Models\Supplier;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use App\Http\Requests\StoreSupplierRequest;
+use App\Http\Requests\UpdateSupplierRequest;
+
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
@@ -18,6 +21,7 @@ class SupplierController extends Controller
     public function index(): View
     {
         $suppliers = Supplier::query()
+            ->whereNull('deleted_at')
             ->latest()
             ->get();
 
@@ -28,22 +32,9 @@ class SupplierController extends Controller
     }
 
     // Create supplier
-    public function store(Request $request): JsonResponse
+    public function store(StoreSupplierRequest $request): JsonResponse
     {
-        $validator = Validator::make($request->all(), [
-            'name'    => ['required', 'string', 'max:255'],
-            'email'   => ['nullable', 'email', 'max:255'],
-            'phone'   => ['nullable', 'string', 'max:50'],
-            'address' => ['nullable', 'string'],
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
-        $supplier = Supplier::create($validator->validated());
+        $supplier = Supplier::create($request->validated());
 
         return response()->json([
             'message'  => 'Supplier created successfully',
@@ -52,16 +43,9 @@ class SupplierController extends Controller
     }
 
     // Update supplier
-    public function update(Request $request, Supplier $supplier): JsonResponse
+    public function update(UpdateSupplierRequest $request, Supplier $supplier): JsonResponse
     {
-        $validated = $request->validate([
-            'name'    => ['required', 'string', 'max:255'],
-            'email'   => ['nullable', 'email', 'max:255'],
-            'phone'   => ['nullable', 'string', 'max:50'],
-            'address' => ['nullable', 'string'],
-        ]);
-
-        $supplier->update($validated);
+        $supplier->update($request->validated());
 
         return response()->json([
             'message'  => 'Supplier updated successfully',

@@ -1,33 +1,93 @@
 <div id="viewSupplierModal"
-     class="fixed inset-0 z-50 flex items-center justify-center
-            opacity-0 pointer-events-none transition"
+     class="fixed inset-0 z-50 flex items-start justify-center
+            bg-black bg-opacity-0 opacity-0 pointer-events-none
+            transition-opacity duration-300"
      data-modal-overlay>
 
-    <div class="modal-box bg-white rounded-lg shadow-lg w-full max-w-lg
-                transform transition">
+    <div class="flex items-center justify-center min-h-screen px-4">
+        <div class="modal-box w-full max-w-2xl bg-white rounded-lg shadow-xl
+                    transform -translate-y-6 opacity-0
+                    transition-all duration-300 ease-out">
 
-        <div class="p-6 space-y-4">
+            <!-- HEADER -->
+            <div class="relative px-6 py-4 bg-blue-600 text-white rounded-t-lg">
+                <h2 class="text-lg font-semibold">
+                    Supplier Detail
+                </h2>
 
-            <h2 class="text-lg font-semibold text-gray-800">
-                Supplier Detail
-            </h2>
-
-            <div class="space-y-2 text-sm">
-                <p><strong>Name:</strong> <span id="view-name"></span></p>
-                <p><strong>Email:</strong> <span id="view-email"></span></p>
-                <p><strong>Phone:</strong> <span id="view-phone"></span></p>
-                <p><strong>Address:</strong> <span id="view-address"></span></p>
-                <p><strong>Created:</strong> <span id="view-created"></span></p>
-                <p><strong>Updated:</strong> <span id="view-updated"></span></p>
+                <button
+                    data-modal-close
+                    class="absolute top-0 right-0
+                           w-12 h-12
+                           flex items-center justify-center
+                           text-white
+                           rounded-tr-lg
+                           hover:bg-red-500 transition">
+                    ✕
+                </button>
             </div>
 
-            <div class="flex justify-end">
-                <button
-                    type="button"
-                    data-modal-close
-                    class="px-4 py-2 text-sm bg-gray-600 text-white rounded hover:bg-gray-700">
-                    Close
-                </button>
+            <!-- CONTENT -->
+            <div class="px-6 py-6 space-y-5">
+
+                @php
+                    $row = 'grid grid-cols-[90px_1px_1fr] items-center
+                            px-4 py-3 border rounded-lg shadow-sm
+                            hover:shadow-md transition bg-white';
+
+                    $label = 'text-sm text-gray-500 pr-4 text-left';
+                    $divider = 'h-6 bg-gray-300';
+                    $value = 'text-sm font-medium text-gray-700
+                              text-right pl-4 break-all';
+                @endphp
+
+                <!-- INFO GRID -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                    {{-- Name --}}
+                    <div class="{{ $row }}">
+                        <span class="{{ $label }}">Name</span>
+                        <span class="{{ $divider }}"></span>
+                        <span id="view-name" class="{{ $value }}"></span>
+                    </div>
+
+                    {{-- Email --}}
+                    <div class="{{ $row }}">
+                        <span class="{{ $label }}">Email</span>
+                        <span class="{{ $divider }}"></span>
+                        <span id="view-email" class="{{ $value }}"></span>
+                    </div>
+
+                    {{-- Phone --}}
+                    <div class="{{ $row }}">
+                        <span class="{{ $label }}">Phone</span>
+                        <span class="{{ $divider }}"></span>
+                        <span id="view-phone" class="{{ $value }}"></span>
+                    </div>
+
+                    {{-- Address --}}
+                    <div class="{{ $row }}">
+                        <span class="{{ $label }}">Address</span>
+                        <span class="{{ $divider }}"></span>
+                        <span id="view-address" class="{{ $value }}"></span>
+                    </div>
+
+                    {{-- Created --}}
+                    <div class="{{ $row }}">
+                        <span class="{{ $label }}">Created</span>
+                        <span class="{{ $divider }}"></span>
+                        <span id="view-created" class="{{ $value }}"></span>
+                    </div>
+
+                    {{-- Updated --}}
+                    <div class="{{ $row }}">
+                        <span class="{{ $label }}">Updated</span>
+                        <span class="{{ $divider }}"></span>
+                        <span id="view-updated" class="{{ $value }}"></span>
+                    </div>
+
+                </div>
+
             </div>
 
         </div>

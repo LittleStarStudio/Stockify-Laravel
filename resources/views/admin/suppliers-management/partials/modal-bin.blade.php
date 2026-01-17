@@ -11,7 +11,7 @@
                 <h2 class="font-semibold">Supplier Bin</h2>
 
                 <button data-modal-close
-                    class="absolute top-0 right-0 w-12 h-12 flex items-center justify-center hover:bg-red-500">
+                    class="absolute top-0 right-0 w-12 h-12 flex items-center justify-center hover:bg-red-500 transition">
                     ✕
                 </button>
             </div>
@@ -21,12 +21,12 @@
                        class="w-full text-sm text-left border-collapse table-crud">
                     <thead class="bg-gray-100">
                         <tr>
-                            <th class="px-4 py-2 text-center">No</th>
+                            <th class="px-4 py-2 text-center col-action">No</th>
                             <th class="px-4 py-2">Name</th>
                             <th class="px-4 py-2">Email</th>
                             <th class="px-4 py-2">Phone</th>
                             <th class="px-4 py-2">Deleted At</th>
-                            <th class="px-4 py-2 text-center">Action</th>
+                            <th class="px-4 py-2 text-center col-action">Action</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
