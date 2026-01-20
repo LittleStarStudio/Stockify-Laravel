@@ -27,7 +27,7 @@
         </div>
 
         {{-- BODY --}}
-        <form id="editSupplierForm" class="px-6 py-5 space-y-4">
+        <form id="editSupplierForm" class="px-6 py-5 space-y-4" method="POST">
 
             {{-- NAME --}}
             <div>

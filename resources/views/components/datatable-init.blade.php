@@ -1,8 +1,3 @@
-@props([
-    'id',
-    'columnDefs' => []
-])
-
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -11,7 +6,8 @@
             return;
         }
 
-        $('#{{ $id }}').DataTable({
+        // INIT DATATABLE
+        const table = $('#{{ $id }}').DataTable({
             pageLength: 10,
             lengthChange: false,
             responsive: true,
@@ -28,6 +24,18 @@
             }
         });
 
+        // AUTO NUMBERING KOLOM "No"
+        table.on('order.dt search.dt draw.dt', function () {
+            table
+                .column(0, { search: 'applied', order: 'applied' })
+                .nodes()
+                .each((cell, i) => {
+                    cell.innerHTML = i + 1;
+                });
+        }).draw();
+
+        // SIMPAN INSTANCE KE GLOBAL
+        window.suppliersManagementDataTable = table;
     });
 </script>
 @endpush

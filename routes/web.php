@@ -16,7 +16,7 @@ use App\Http\Controllers\Admin\SupplierController;
 
 // Route untuk halaman public (Umum)
 Route::get('/', function () {
-    return view('welcome');
+return view('welcome');
 });
 
 
