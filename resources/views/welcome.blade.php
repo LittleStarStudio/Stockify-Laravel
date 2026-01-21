@@ -21,13 +21,11 @@
         <!-- LEFT -->
         <div class="p-10 flex flex-col justify-center">
             <h1 class="text-3xl md:text-4xl font-bold text-blue-700 mb-4">
-                Selamat Datang di <span class="text-blue-500">Stockify</span>
+                Welcome to <span class="text-blue-500">Stockify</span>
             </h1>
 
             <p class="text-gray-600 mb-6">
-                Aplikasi manajemen stok yang membantu Admin, Manajer Gudang,
-                dan Staff Gudang dalam mengelola barang masuk, keluar, dan stok opname
-                secara efisien.
+                A stock management system designed to assist Admins, Warehouse Managers, and Warehouse Staff in efficiently managing inbound goods, outbound goods, and inventory stock-taking.
             </p>
 
             <div class="flex gap-3">
@@ -50,9 +48,9 @@
                     <path stroke-linecap="round" stroke-linejoin="round"
                           d="M20 7h-3V4H7v3H4v13h16V7Z"/>
                 </svg>
-                <h2 class="text-xl font-semibold">Kelola Stok Lebih Mudah</h2>
+                <h2 class="text-xl font-semibold">Manage Your Stock with Ease</h2>
                 <p class="text-blue-100 text-sm mt-2">
-                    Cepat • Akurat • Terstruktur
+                    Fast • Accurate • Structured
                 </p>
             </div>
         </div>
@@ -63,7 +61,7 @@
     <div class="mt-6 text-center">
         <button id="btnCreator"
                 class="px-5 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition">
-            Pembuat Web
+            Web Developer
         </button>
     </div>
 
@@ -77,12 +75,12 @@
 <script>
 document.getElementById('btnCreator').addEventListener('click', function () {
     Swal.fire({
-        title: "Pembuat Web",
+        title: "Web Developer",
         html: `
             <b>Backend:</b> Fariduddin Syah Attar<br>
             <b>Frontend:</b> Ayeisha Xiarra Hanummitha<br>
-            <b>Aplikasi:</b> Stockify<br>
-            <b>Fitur:</b> Manajemen Stok Gudang
+            <b>App:</b> Stockify<br>
+            <b>Feature:</b> Warehouse Inventory Management
         `,
         width: 600,
         padding: "2em",

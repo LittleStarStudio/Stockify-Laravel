@@ -82,7 +82,7 @@
                 <thead class="bg-blue-600 text-white border-b border-blue-700">
                     <tr class="uppercase tracking-wide text-xs font-semibold">
                         <th class="px-5 py-4 text-xs font-semibold text-white text-center col-action">No</th>
-                        <th class="px-5 py-4 text-xs font-semibold text-white">User</th>
+                        <th class="px-5 py-4 text-xs font-semibold text-white">Name</th>
                         <th class="px-5 py-4 text-xs font-semibold text-white">Email</th>
                         <th class="px-5 py-4 text-xs font-semibold text-white">Role</th>
                         <th class="px-5 py-4 text-xs font-semibold text-white">Status</th>

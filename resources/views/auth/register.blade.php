@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Register - Stockify</title>
+    <title>Register | Stockify</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -14,9 +14,9 @@
 
         <!-- Header -->
         <div class="bg-gradient-to-r from-sky-400 to-sky-500 px-8 py-6 text-center">
-            <h1 class="text-2xl font-bold text-white">Buat Akun Stockify</h1>
+            <h1 class="text-2xl font-bold text-white">Create Your Stockify Account</h1>
             <p class="text-sky-100 text-sm mt-1">
-                Akun akan diverifikasi oleh admin
+                Your account will be verified by the admin
             </p>
         </div>
 
@@ -47,11 +47,12 @@
                 <!-- Name -->
                 <div>
                     <label class="block mb-1 text-sm font-medium text-gray-700">
-                        Nama Lengkap
+                        Full Name
                     </label>
                     <input
                         type="text"
                         name="name"
+                        placeholder="Enter your full name"
                         value="{{ old('name') }}"
                         required
                         class="w-full px-4 py-2.5 text-sm bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
@@ -66,6 +67,7 @@
                     <input
                         type="email"
                         name="email"
+                        placeholder="Enter your email"
                         value="{{ old('email') }}"
                         required
                         class="w-full px-4 py-2.5 text-sm bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
@@ -80,6 +82,7 @@
                     <input
                         type="password"
                         name="password"
+                        placeholder="Create your password"
                         required
                         class="w-full px-4 py-2.5 text-sm bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
                     >
@@ -88,11 +91,12 @@
                 <!-- Password Confirmation -->
                 <div>
                     <label class="block mb-1 text-sm font-medium text-gray-700">
-                        Konfirmasi Password
+                        Confirm Password
                     </label>
                     <input
                         type="password"
                         name="password_confirmation"
+                        placeholder="Repeat your password"
                         required
                         class="w-full px-4 py-2.5 text-sm bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
                     >
@@ -102,14 +106,14 @@
                 <button
                     type="submit"
                     class="w-full py-3 text-sm font-semibold text-white bg-sky-500 rounded-lg hover:bg-sky-600 focus:ring-4 focus:ring-sky-300 transition">
-                    Daftar Akun
+                    Create Account
                 </button>
             </form>
 
             <p class="text-center text-sm text-gray-600">
-                Sudah punya akun?
+                Already have an account?
                 <a href="{{ route('login') }}" class="font-semibold text-sky-600 hover:underline">
-                    Login
+                    Log in
                 </a>
             </p>
         </div>
