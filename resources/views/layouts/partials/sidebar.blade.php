@@ -14,70 +14,72 @@
                 </li>
 
 
-                {{-- USERS MENU --}}
-                <li>
+                @if (auth()->user()->role === 'admin')
+                    {{-- USERS MENU --}}
+                    <li>
 
-                    <button type="button"
-                        class="flex items-center w-full gap-3 px-3 py-2 rounded-base
-                        transition
-                        {{ request()->is('admin/user-requests*', 'admin/users-management*')
-                            ? 'bg-sky-300 font-semibold'
-                            : 'hover:bg-sky-200' }}"
-                        aria-controls="dropdown-users"
-                        data-collapse-toggle="dropdown-users">
+                        <button type="button"
+                            class="flex items-center w-full gap-3 px-3 py-2 rounded-base
+                            transition
+                            {{ request()->is('admin/user-requests*', 'admin/users-management*')
+                                ? 'bg-sky-300 font-semibold'
+                                : 'hover:bg-sky-200' }}"
+                            aria-controls="dropdown-users"
+                            data-collapse-toggle="dropdown-users">
 
-                        {{-- ICON --}}
-                        <svg class="flex-shrink-0 w-5 h-5"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24">
-                            <path stroke="currentColor" stroke-width="2"
-                                d="M7 17a4 4 0 0 1 4-4h2a4 4 0 0 1 4 4M12 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/>
-                        </svg>
+                            {{-- ICON --}}
+                            <svg class="flex-shrink-0 w-5 h-5"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-width="2"
+                                    d="M7 17a4 4 0 0 1 4-4h2a4 4 0 0 1 4 4M12 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/>
+                            </svg>
 
-                        {{-- LABEL --}}
-                        <span class="flex-1 text-left whitespace-nowrap">
-                            Users
-                        </span>
+                            {{-- LABEL --}}
+                            <span class="flex-1 text-left whitespace-nowrap">
+                                Users
+                            </span>
 
-                        {{-- ARROW --}}
-                        <svg class="w-4 h-4 transition-transform duration-300"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24">
-                            <path stroke="currentColor" stroke-width="2"
-                                d="m19 9-7 7-7-7"/>
-                        </svg>
-                    </button>
+                            {{-- ARROW --}}
+                            <svg class="w-4 h-4 transition-transform duration-300"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-width="2"
+                                    d="m19 9-7 7-7-7"/>
+                            </svg>
+                        </button>
 
-                    {{-- SUB MENU --}}
-                    <ul id="dropdown-users"
-                        class="hidden py-1 space-y-1">
+                        {{-- SUB MENU --}}
+                        <ul id="dropdown-users"
+                            class="hidden py-1 space-y-1">
 
-                        {{-- USERS REQUEST --}}
-                        <li>
-                            <a href="{{ route('admin.user-requests.index') }}"
-                                class="flex items-center ps-11 pe-3 py-2 rounded-base text-sm
-                                {{ request()->is('admin/user-requests*')
-                                    ? 'bg-sky-300 font-semibold'
-                                    : 'hover:bg-sky-200' }}">
-                                Users Request
-                            </a>
-                        </li>
+                            {{-- USERS REQUEST --}}
+                            <li>
+                                <a href="{{ route('admin.user-requests.index') }}"
+                                    class="flex items-center ps-11 pe-3 py-2 rounded-base text-sm
+                                    {{ request()->is('admin/user-requests*')
+                                        ? 'bg-sky-300 font-semibold'
+                                        : 'hover:bg-sky-200' }}">
+                                    Users Request
+                                </a>
+                            </li>
 
-                        {{-- USERS MANAGEMENT --}}
-                        <li>
-                            <a href="{{ route('admin.users-management.index') }}"
-                                class="flex items-center ps-11 pe-3 py-2 rounded-base text-sm
-                                {{ request()->is('admin/users-management*')
-                                    ? 'bg-sky-300 font-semibold'
-                                    : 'hover:bg-sky-200' }}">
-                                Users Management
-                            </a>
-                        </li>
+                            {{-- USERS MANAGEMENT --}}
+                            <li>
+                                <a href="{{ route('admin.users-management.index') }}"
+                                    class="flex items-center ps-11 pe-3 py-2 rounded-base text-sm
+                                    {{ request()->is('admin/users-management*')
+                                        ? 'bg-sky-300 font-semibold'
+                                        : 'hover:bg-sky-200' }}">
+                                    Users Management
+                                </a>
+                            </li>
 
-                    </ul>
-                </li>
+                        </ul>
+                    </li>
+                @endif
 
 
                 <li>

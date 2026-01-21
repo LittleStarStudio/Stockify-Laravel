@@ -111,5 +111,11 @@ class SupplierController extends Controller
         ]);
     }
 
+    //Defensif layer
+    public function __construct()
+    {
+        $this->middleware('admin')->except(['index', 'bin']);
+    }
+
 
 }

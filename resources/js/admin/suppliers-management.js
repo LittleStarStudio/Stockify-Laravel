@@ -7,6 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+    const userRole = document.body.dataset.role;
+    const isAdmin = userRole === "admin";
 
     let suppliersManagementDataTable = null;
     let binSuppliersDataTable = null;
@@ -82,59 +84,18 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // RENDER ROW
-    function renderSupplierRow(supplier) {
-        return [
-            "",
-            supplier.name,
-            supplier.address ?? "-",
-            supplier.phone ?? "-",
-            supplier.email ?? "-",
-            `
-            <div class="relative inline-block text-left" data-supplier-id="${supplier.id}">
-                <button type="button"
-                    class="action-toggle inline-flex items-center gap-1 px-3 py-1.5 text-xs bg-gray-100 rounded">
-                    Actions
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24">
-                        <path stroke="currentColor" stroke-width="2" d="M6 9l6 6 6-6"/>
-                    </svg>
-                </button>
-
-                <div class="action-menu hidden absolute right-0 mt-2 w-36 bg-white border rounded shadow z-50">
-                    <button type="button"
-                        data-action="view"
-                        class="block w-full px-3 py-2 text-sm"
-                        data-supplier='${JSON.stringify(supplier)}'>
-                        View
-                    </button>
-
-                    <button type="button"
-                        data-action="edit"
-                        class="block w-full px-3 py-2 text-sm"
-                        data-supplier='${JSON.stringify(supplier)}'>
-                        Edit
-                    </button>
-
-                    <form action="/admin/suppliers-management/${supplier.id}" method="POST">
-                        <input type="hidden" name="_token" value="${csrfToken}">
-                        <input type="hidden" name="_method" value="DELETE">
-                        <button type="button"
-                            class="btn-confirm block w-full px-3 py-2 text-sm text-red-600"
-                            data-title="Delete supplier?"
-                            data-text="Supplier will be moved to Bin"
-                            data-confirm="Yes, Delete"
-                            data-color="#dc2626">
-                            Delete
-                        </button>
-                    </form>
-                </div>
-            </div>
-            `
-        ];
-    }
-
     //GLOBAL CLICK HANDLER
     document.addEventListener("click", async (e) => {
+
+        // GUARD CLICK HANDLER
+        if (!isAdmin && (
+            e.target.closest("#btnAddSupplier") ||
+            e.target.closest("#btn-save-create-supplier") ||
+            e.target.closest("#btn-save-edit-supplier")
+        )) {
+            Swal.fire("Access Denied", "Read-only access", "warning");
+            return;
+        }
 
         // CLOSE MODAL
         const overlay = e.target.closest("[data-modal-overlay]");

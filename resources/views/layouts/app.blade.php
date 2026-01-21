@@ -16,7 +16,7 @@
 
 </head>
 
-<body class="font-sans antialiased bg-neutral-primary-soft min-h-screen">
+<body class="font-sans antialiased bg-neutral-primary-soft min-h-screen" data-role="{{ auth()->user()->role }}">
 
     {{-- Navbar & Sidebar  Start--}}
     @include('layouts.partials.navbar')
