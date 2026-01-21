@@ -1,8 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-    /* =====================================================
-       VALIDASI DEPENDENSI
-    ===================================================== */
+    // VALIDASI DEPENDENSI
     if (typeof window.$ === "undefined" || !$.fn || !$.fn.DataTable) {
         console.warn("jQuery / DataTable not loaded");
         return;
@@ -13,16 +11,26 @@ document.addEventListener("DOMContentLoaded", () => {
     let suppliersManagementDataTable = null;
     let binSuppliersDataTable = null;
 
-    /* =====================================================
-       AMBIL DATATABLE (SUDAH DI-INIT DARI BLADE)
-    ===================================================== */
+    // AMBIL DATATABLE
     if ($.fn.DataTable.isDataTable("#suppliersManagementTable")) {
         suppliersManagementDataTable = $("#suppliersManagementTable").DataTable();
     }
 
-    /* =====================================================
-       UTILITIES (SAMA DENGAN USERS MANAGEMENT)
-    ===================================================== */
+    // AUTO NUMBERING 
+    if (suppliersManagementDataTable) {
+        suppliersManagementDataTable
+            .on("order.dt search.dt draw.dt", function () {
+                suppliersManagementDataTable
+                    .column(0, { search: "applied", order: "applied" })
+                    .nodes()
+                    .each((cell, i) => {
+                        cell.innerHTML = i + 1;
+                    });
+            })
+            .draw();
+    }
+
+    // UTILITIES
     function closeAllActionMenus() {
         document.querySelectorAll(".action-menu")
             .forEach(menu => menu.classList.add("hidden"));
@@ -44,6 +52,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function closeModal(modal) {
         if (!modal) return;
+
+        modal.querySelectorAll(".text-red-600").forEach(el => el.remove());
+        modal.querySelectorAll(".border-red-500").forEach(el => el.classList.remove("border-red-500"));
+        modal.querySelectorAll(".focus\\:ring-red-500").forEach(el => el.classList.remove("focus:ring-red-500"));
+        modal.querySelector(".is-validation-error")?.remove();
 
         const box = modal.querySelector(".modal-box");
         if (box) {
@@ -69,9 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    /* =====================================================
-       RENDER ROW (UNTUK TAMPILAN, BUKAN AUTO UPDATE)
-    ===================================================== */
+    // RENDER ROW
     function renderSupplierRow(supplier) {
         return [
             "",
@@ -122,12 +133,10 @@ document.addEventListener("DOMContentLoaded", () => {
         ];
     }
 
-    /* =====================================================
-       GLOBAL CLICK HANDLER (POLA USERS MANAGEMENT)
-    ===================================================== */
+    //GLOBAL CLICK HANDLER
     document.addEventListener("click", async (e) => {
 
-        /* ---------- CLOSE MODAL ---------- */
+        // CLOSE MODAL
         const overlay = e.target.closest("[data-modal-overlay]");
         if (overlay && !e.target.closest(".modal-box")) {
             closeModal(overlay);
@@ -141,7 +150,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        /* ---------- DROPDOWN ---------- */
+        // DROPDOWN
         const toggle = e.target.closest(".action-toggle");
         if (toggle) {
             closeAllActionMenus();
@@ -153,17 +162,13 @@ document.addEventListener("DOMContentLoaded", () => {
             closeAllActionMenus();
         }
 
-        /* =================================================
-           ADD SUPPLIER
-        ================================================= */
+        // ADD SUPPLIER
         if (e.target.closest("#btnAddSupplier")) {
             openModal(document.getElementById("createSupplierModal"));
             return;
         }
 
-        /* =================================================
-           VIEW SUPPLIER
-        ================================================= */
+        // VIEW SUPPLIER
         const viewBtn = e.target.closest("[data-action='view']");
         if (viewBtn) {
             const s = JSON.parse(viewBtn.dataset.supplier);
@@ -179,9 +184,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        /* =================================================
-           EDIT SUPPLIER
-        ================================================= */
+        // EDIT SUPPLIER
         const editBtn = e.target.closest("[data-action='edit']");
         if (editBtn) {
             const s = JSON.parse(editBtn.dataset.supplier);
@@ -197,14 +200,13 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        /* =================================================
-           SAVE CREATE (AMAN → RELOAD)
-        ================================================= */
+        // SAVE CREATE + RELOAD
         const createBtn = e.target.closest("#btn-save-create-supplier");
         if (createBtn) {
             createBtn.disabled = true;
 
             const form = document.getElementById("createSupplierForm");
+            if (!form) return;
 
             const res = await fetch("/admin/suppliers-management", {
                 method: "POST",
@@ -235,14 +237,14 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        /* =================================================
-           SAVE EDIT (PUT — AMAN → RELOAD)
-        ================================================= */
+        // SAVE EDIT + RELOAD
         const editSaveBtn = e.target.closest("#btn-save-edit-supplier");
         if (editSaveBtn) {
             editSaveBtn.disabled = true;
 
             const form = document.getElementById("editSupplierForm");
+            if (!form) return;
+
             const formData = new FormData(form);
             formData.append("_method", "PUT");
 
@@ -275,9 +277,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        /* =================================================
-           OPEN BIN
-        ================================================= */
+        // OPEN BIN
         if (e.target.closest("#btn-open-bin-supplier")) {
 
             const res = await fetch("/admin/suppliers-management/bin");
@@ -341,9 +341,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        /* =================================================
-           DELETE & RESTORE (FULL AMAN → RELOAD)
-        ================================================= */
+        // DELETE & RESTORE + RELOAD
         const confirmBtn = e.target.closest(".btn-confirm");
         if (!confirmBtn) return;
 
