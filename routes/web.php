@@ -6,6 +6,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\UserRequestController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\Admin\SupplierController;
+use App\Http\Controllers\Admin\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +39,7 @@ Route::middleware('auth')->group(function () {
 require __DIR__ . '/auth.php';
 
 
+
 // Admin routes
 Route::middleware(['auth', 'approved'])
     ->prefix('admin')
@@ -45,17 +47,18 @@ Route::middleware(['auth', 'approved'])
     ->group(function () {
 
 
-        // Users (Hanya admin)
+        // USERS
+        // Users (Admin Only)
         Route::middleware('admin')->group(function (){
 
-            // User Requests (Approval/Rejection)
+            // User Requests Approval/Rejection
             Route::controller(UserRequestController::class)->group(function () {
                 Route::get('user-requests', 'index')->name('user-requests.index');
                 Route::post('user-requests/{user}/approve', 'approve')->name('user-requests.approve');
                 Route::post('user-requests/{user}/reject', 'reject')->name('user-requests.reject');
             });
 
-            // User Management (CRUD)
+            // Users Management CRUD
             Route::controller(UserManagementController::class)->group(function () {
 
                 // Main CRUD
@@ -73,10 +76,12 @@ Route::middleware(['auth', 'approved'])
 
         });
 
-        // Suppliers lihat data (semua admin, manager, dan staff)
+
+        // SUPPLIERS
+        // Suppliers View (Admin, Manager, Staff)
         Route::middleware('role:admin,manajer_gudang,staff_gudang')->controller(SupplierController::class)->group(function () {
 
-            // Data Table Utama suppliers
+            // Data Table Utama Suppliers
             Route::get('suppliers-management', 'index')->name('suppliers-management.index');
 
             // Data Table Bin Suppliers
@@ -84,7 +89,7 @@ Route::middleware(['auth', 'approved'])
 
         });
 
-        // Supplier Management CRUD (Hanya admin)
+        // Suppliers Management CRUD (Admin Only)
         Route::middleware('admin')->controller(SupplierController::class)->group(function () {
 
                 // Main CRUD
@@ -95,5 +100,30 @@ Route::middleware(['auth', 'approved'])
                 // Restore dari Bin
                 Route::post('suppliers-management/{id}/restore', 'restore')->name('suppliers-management.restore');
         });
+
+
+        // CATEGORIES
+        // Categories View (Admin, Manager, Staff)
+        Route::middleware(['role:admin,manajer_gudang,staff_gudang'])->controller(CategoryController::class)->group(function () {
+
+            // Data Table Utama Categories
+            Route::get('categories-management', 'index')->name('categories-management.index');
+
+            // Data Table Bin Categories
+            Route::get('categories-management/bin', 'bin')->name('categories-management.bin');
+        });
+
+
+        // Categories Management CRUD (Admin Only)
+        Route::middleware(['admin'])->controller(CategoryController::class)->group(function () {
+
+        // Main CRUD
+        Route::post('categories-management', 'store')->name('categories-management.store');
+        Route::put('categories-management/{category}', 'update')->name('categories-management.update');
+        Route::delete('categories-management/{category}', 'destroy')->name('categories-management.destroy');
+
+        // Restore dari Bin
+        Route::post('categories-management/{id}/restore', 'restore')->name('categories-management.restore');
+    });
 
     });

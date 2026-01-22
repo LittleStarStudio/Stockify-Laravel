@@ -7,15 +7,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
-    const userRole = document.body.dataset.role;
+    const userRole = document.body.dataset.role || "guest";
     const isAdmin = userRole === "admin";
 
-    let suppliersManagementDataTable = null;
-    let binSuppliersDataTable = null;
+    let categoriesManagementDataTable = null;
+    let binCategoriesDataTable = null;
 
     // AMBIL DATATABLE
-    if ($.fn.DataTable.isDataTable("#suppliersManagementTable")) {
-        suppliersManagementDataTable = $("#suppliersManagementTable").DataTable();
+    if ($.fn.DataTable.isDataTable("#categoriesManagementTable")) {
+        categoriesManagementDataTable = $("#categoriesManagementTable").DataTable();
     }
 
     // UTILITIES
@@ -75,9 +75,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // GUARD CLICK HANDLER
         if (!isAdmin && (
-            e.target.closest("#btnAddSupplier") ||
-            e.target.closest("#btn-save-create-supplier") ||
-            e.target.closest("#btn-save-edit-supplier")
+            e.target.closest("#btnAddCategory") ||
+            e.target.closest("#btn-save-create-category") ||
+            e.target.closest("#btn-save-edit-category")
         )) {
             Swal.fire("Access Denied", "Read-only access", "warning");
             return;
@@ -109,53 +109,60 @@ document.addEventListener("DOMContentLoaded", () => {
             closeAllActionMenus();
         }
 
-        // ADD SUPPLIER
-        if (e.target.closest("#btnAddSupplier")) {
-            openModal(document.getElementById("createSupplierModal"));
+        // ADD CATEGORY
+        if (e.target.closest("#btnAddCategory")) {
+            openModal(document.getElementById("createCategoryModal"));
             return;
         }
 
-        // VIEW SUPPLIER
+        // VIEW CATEGORY
         const viewBtn = e.target.closest("[data-action='view']");
         if (viewBtn) {
-            const s = JSON.parse(viewBtn.dataset.supplier);
+            const c = JSON.parse(viewBtn.dataset.category);
 
-            document.getElementById("view-name").textContent = s.name;
-            document.getElementById("view-email").textContent = s.email ?? "-";
-            document.getElementById("view-phone").textContent = s.phone ?? "-";
-            document.getElementById("view-address").textContent = s.address ?? "-";
-            document.getElementById("view-created").textContent = s.created_at ?? "-";
-            document.getElementById("view-updated").textContent = s.updated_at ?? "-";
+            document.getElementById("view-name").textContent = c.name;
+            document.getElementById("view-description").textContent = c.description ?? "-";
+            document.getElementById("view-created").textContent = c.created_at ?? "-";
+            document.getElementById("view-updated").textContent = c.updated_at ?? "-";
 
-            openModal(document.getElementById("viewSupplierModal"));
+            const statusEl = document.getElementById("view-status");
+
+            if (c.is_active) {
+                statusEl.textContent = "Active";
+                statusEl.className = "inline-flex items-center px-3 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700";
+            } else {
+                statusEl.textContent = "Inactive";
+                statusEl.className = "inline-flex items-center px-3 py-1 text-xs font-medium rounded-full bg-red-100 text-red-700";
+            }
+
+            openModal(document.getElementById("viewCategoryModal"));
             return;
         }
 
-        // EDIT SUPPLIER
+        // EDIT CATEGORY
         const editBtn = e.target.closest("[data-action='edit']");
         if (editBtn) {
-            const s = JSON.parse(editBtn.dataset.supplier);
-            const form = document.getElementById("editSupplierForm");
+            const c = JSON.parse(editBtn.dataset.category);
+            const form = document.getElementById("editCategoryForm");
 
-            form.action = `/admin/suppliers-management/${s.id}`;
-            form.querySelector("#edit-name").value = s.name;
-            form.querySelector("#edit-email").value = s.email ?? "";
-            form.querySelector("#edit-phone").value = s.phone ?? "";
-            form.querySelector("#edit-address").value = s.address ?? "";
+            form.action = `/admin/categories-management/${c.id}`;
+            form.querySelector("#edit-name").value = c.name;
+            form.querySelector("#edit-status").value = c.is_active ?? "";
+            form.querySelector("#edit-description").value = c.description ?? "";
 
-            openModal(document.getElementById("editSupplierModal"));
+            openModal(document.getElementById("editCategoryModal"));
             return;
         }
 
         // SAVE CREATE + RELOAD
-        const createBtn = e.target.closest("#btn-save-create-supplier");
+        const createBtn = e.target.closest("#btn-save-create-category");
         if (createBtn) {
             createBtn.disabled = true;
 
-            const form = document.getElementById("createSupplierForm");
+            const form = document.getElementById("createCategoryForm");
             if (!form) return;
 
-            const res = await fetch("/admin/suppliers-management", {
+            const res = await fetch("/admin/categories-management", {
                 method: "POST",
                 headers: {
                     "X-CSRF-TOKEN": csrfToken,
@@ -185,11 +192,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         // SAVE EDIT + RELOAD
-        const editSaveBtn = e.target.closest("#btn-save-edit-supplier");
+        const editSaveBtn = e.target.closest("#btn-save-edit-category");
         if (editSaveBtn) {
             editSaveBtn.disabled = true;
 
-            const form = document.getElementById("editSupplierForm");
+            const form = document.getElementById("editCategoryForm");
             if (!form) return;
 
             const formData = new FormData(form);
@@ -225,31 +232,30 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         // OPEN BIN
-        if (e.target.closest("#btn-open-bin-supplier")) {
+        if (e.target.closest("#btn-open-bin-category")) {
 
-            const res = await fetch("/admin/suppliers-management/bin");
-            const suppliers = await res.json();
+            const res = await fetch("/admin/categories-management/bin");
+            const categories = await res.json();
 
             if (!res.ok) {
                 Swal.fire("Error", "Failed to load bin data", "error");
                 return;
             }
 
-            openModal(document.getElementById("binSupplierModal"));
+            openModal(document.getElementById("binCategoryModal"));
 
             requestAnimationFrame(() => {
 
-                if ($.fn.DataTable.isDataTable("#binSuppliersTable")) {
-                    binSuppliersDataTable.clear().destroy();
+                if ($.fn.DataTable.isDataTable("#binCategoriesTable")) {
+                    binCategoriesDataTable.clear().destroy();
                 }
 
-                binSuppliersDataTable = $("#binSuppliersTable").DataTable({
-                    data: suppliers,
+                binCategoriesDataTable = $("#binCategoriesTable").DataTable({
+                    data: categories,
                     columns: [
                         { data: null, className: "text-center" },
                         { data: "name" },
-                        { data: "email" },
-                        { data: "phone" },
+                        { data: "description" },
                         {
                             data: "deleted_at",
                             render: d => formatDate(d)
@@ -259,12 +265,12 @@ document.addEventListener("DOMContentLoaded", () => {
                             orderable: false,
                             className: "text-center",
                             render: id => `
-                                <form action="/admin/suppliers-management/${id}/restore" method="POST">
+                                <form action="/admin/categories-management/${id}/restore" method="POST">
                                     <input type="hidden" name="_token" value="${csrfToken}">
                                     <button type="button"
                                         class="btn-confirm px-3 py-1.5 rounded bg-slate-800 text-white"
-                                        data-title="Restore supplier?"
-                                        data-text="Supplier will be restored"
+                                        data-title="Restore category?"
+                                        data-text="Category will be restored"
                                         data-confirm="Yes, Restore"
                                         data-color="#2563eb">
                                         Restore
@@ -276,12 +282,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     pageLength: 10,
                     lengthChange: false,
                     order: [],
-                    columnDefs: [{ orderable: false, targets: [0, 5] }]
+                    columnDefs: [{ orderable: false, targets: [0, 4] }]
                 });
 
                 // AUTO NUMBERING BIN
-                binSuppliersDataTable.on("draw.dt", () => {
-                    binSuppliersDataTable.column(0).nodes()
+                binCategoriesDataTable.on("draw.dt", () => {
+                    binCategoriesDataTable.column(0).nodes()
                         .each((cell, i) => cell.innerHTML = i + 1);
                 }).draw();
             });

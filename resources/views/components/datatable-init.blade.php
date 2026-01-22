@@ -35,7 +35,8 @@
         }).draw();
 
         // SIMPAN INSTANCE KE GLOBAL
-        window.suppliersManagementDataTable = table;
+        window['dt_' + '{{ $id }}'] = table;
+        
     });
 </script>
 @endpush

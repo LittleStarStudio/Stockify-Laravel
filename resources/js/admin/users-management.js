@@ -303,7 +303,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     ]
                 });
 
-                // AUTO NUMBERING
+                // AUTO NUMBERING BIN
                 binUsersDataTable
                     .off('order.dt search.dt draw.dt')
                     .on('order.dt search.dt draw.dt', function () {
@@ -319,24 +319,6 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
         });
-    }
-
-    // AUTO NUMBERING USERS MANAGEMENT TABLE
-    if (typeof $ !== "undefined" && $.fn.DataTable) {
-
-        if ($('#usersManagementTable').length) {
-            usersManagementDataTable = $('#usersManagementTable').DataTable();
-
-            usersManagementDataTable.on('order.dt search.dt draw.dt', function () {
-                usersManagementDataTable
-                    .column(0, { search: 'applied', order: 'applied' })
-                    .nodes()
-                    .each((cell, i) => {
-                        cell.innerHTML = i + 1;
-                    });
-            }).draw();
-        }
-
     }
 
     // GLOBAL CLICK HANDLER

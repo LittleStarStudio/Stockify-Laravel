@@ -26,12 +26,6 @@ document.addEventListener("click", function (e) {
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    // Auto Numbering users request table
-    if (typeof $ === "undefined" || !$.fn.DataTable) {
-        console.error("jQuery / DataTable belum ter-load");
-        return;
-    }
-
     const requestTable = $('#usersRequestTable').DataTable();
 
     requestTable.on('order.dt search.dt draw.dt', function () {

@@ -90,15 +90,15 @@
                         <span>Supplier</span>
                     </a>
                 </li>
-
-                {{-- <li>
-                    <a href="/create_categories" class="flex items-center gap-3 px-3 py-2 rounded-base {{ request()->is('categories') ? 'bg-sky-300 font-semibold' : 'hover:bg-sky-200' }}">
+                
+                <li>
+                    <a href="{{ route('admin.categories-management.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-base {{ request()->is('admin/categories-management*') ? 'bg-sky-300 font-semibold' : 'hover:bg-sky-200' }}">
                         <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m17 21-5-4-5 4V3.889a.92.92 0 0 1 .244-.629.808.808 0 0 1 .59-.26h8.333a.81.81 0 0 1 .589.26.92.92 0 0 1 .244.63V21Z"/>
                         </svg>
                         <span>Categories</span>
                     </a>
-                </li> --}}
+                </li>
 
                 {{-- <li>
                     <a href="/products" class="flex items-center gap-3 px-3 py-2 rounded-base {{ request()->is('products') ? 'bg-sky-300 font-semibold' : 'hover:bg-sky-200' }}">
