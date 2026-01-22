@@ -76,12 +76,16 @@
                         <span id="view-updated" class="{{ $value }}"></span>
                     </div>
 
-                    {{-- Description --}}
-                    <div class="{{ $row }}">
-                        <span class="{{ $label }}">Description</span>
-                        <span class="{{ $divider }}"></span>
-                        <span id="view-description" class="{{ $value }}"></span>
-                    </div>
+                </div>
+
+                {{-- Description --}}
+                <div class="border rounded-lg shadow-sm bg-white p-4 space-y-2 hover:shadow-md transition bg-white">
+                    
+                    <p class="text-sm text-gray-500 text-center">
+                        Description
+                    </p>
+                    <hr class="border-gray-300">
+                    <p id="view-description" class="text-sm text-gray-700 font-medium text-left break-words"></p>
 
                 </div>
 

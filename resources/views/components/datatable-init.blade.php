@@ -34,7 +34,7 @@
                 });
         }).draw();
 
-        // SIMPAN INSTANCE KE GLOBAL
+        // INSTANCE GLOBAL
         window['dt_' + '{{ $id }}'] = table;
         
     });
