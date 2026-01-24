@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ProductController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ProfileController;
@@ -9,27 +10,22 @@ use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Admin\CategoryController;
 
 /*
-|--------------------------------------------------------------------------
+|---------------------------------------------------------------------------
 | Web Routes
-|--------------------------------------------------------------------------
+|---------------------------------------------------------------------------
 */
 
-
-// Route untuk halaman public (Umum)
+// PUBLIC
 Route::get('/', function () {
-return view('welcome');
+    return view('welcome');
 });
 
-
-
-// Dashboard (Hanya untuk user yang sudah Authenticated & Approved)
+// DASHBOARD
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'approved'])->name('dashboard');
 
-
-
-// Profile (Breeze)
+// PROFILE (Breeze)
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -38,92 +34,94 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__ . '/auth.php';
 
-
-
-// Admin routes
+// ADMIN PANEL
 Route::middleware(['auth', 'approved'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
 
+        // USERS 
+        Route::middleware('admin')->group(function () {
 
-        // USERS
-        // Users (Admin Only)
-        Route::middleware('admin')->group(function (){
-
-            // User Requests Approval/Rejection
+            // USERS REQUESTS
             Route::controller(UserRequestController::class)->group(function () {
                 Route::get('user-requests', 'index')->name('user-requests.index');
                 Route::post('user-requests/{user}/approve', 'approve')->name('user-requests.approve');
                 Route::post('user-requests/{user}/reject', 'reject')->name('user-requests.reject');
             });
 
-            // Users Management CRUD
+            // USERS MANAGEMENT (CRUD)
             Route::controller(UserManagementController::class)->group(function () {
-
-                // Main CRUD
                 Route::get('users-management', 'index')->name('users-management.index');
                 Route::post('users-management', 'store')->name('users-management.store');
                 Route::put('users-management/{user}', 'update')->name('users-management.update');
                 Route::delete('users-management/{user}', 'destroy')->name('users-management.destroy');
 
-                // Bin (Soft Deleted Users)
-                Route::get('users-management/bin', [UserManagementController::class, 'bin'])->name('users-management.bin');
-
-                // Restore dari Bin
-                Route::post('users-management/{id}/restore', [UserManagementController::class, 'restore'])->name('users-management.restore');
+                Route::get('users-management/bin', 'bin')->name('users-management.bin');
+                Route::post('users-management/{id}/restore', 'restore')->name('users-management.restore');
             });
 
         });
 
 
-        // SUPPLIERS
-        // Suppliers View (Admin, Manager, Staff)
-        Route::middleware('role:admin,manajer_gudang,staff_gudang')->controller(SupplierController::class)->group(function () {
+        // SUPPLIERS 
+        // SUPPLIERS VIEWS DATA (ADMIN, MANAGER, STAFF)
+        Route::middleware('role:admin,manajer_gudang,staff_gudang')
+            ->controller(SupplierController::class)
+            ->group(function () {
+                Route::get('suppliers-management', 'index')->name('suppliers-management.index');
+                Route::get('suppliers-management/bin', 'bin')->name('suppliers-management.bin');
+            });
 
-            // Data Table Utama Suppliers
-            Route::get('suppliers-management', 'index')->name('suppliers-management.index');
-
-            // Data Table Bin Suppliers
-            Route::get('suppliers-management/bin', 'bin')->name('suppliers-management.bin');
-
-        });
-
-        // Suppliers Management CRUD (Admin Only)
-        Route::middleware('admin')->controller(SupplierController::class)->group(function () {
-
-                // Main CRUD
+        // SUPPLIERS CRUD (ADMIN ONLY)
+        Route::middleware('admin')
+            ->controller(SupplierController::class)
+            ->group(function () {
                 Route::post('suppliers-management', 'store')->name('suppliers-management.store');
                 Route::put('suppliers-management/{supplier}', 'update')->name('suppliers-management.update');
                 Route::delete('suppliers-management/{supplier}', 'destroy')->name('suppliers-management.destroy');
-
-                // Restore dari Bin
                 Route::post('suppliers-management/{id}/restore', 'restore')->name('suppliers-management.restore');
-        });
+            });
 
 
-        // CATEGORIES
-        // Categories View (Admin, Manager, Staff)
-        Route::middleware(['role:admin,manajer_gudang,staff_gudang'])->controller(CategoryController::class)->group(function () {
+        // CATEGORIES 
+        // CATEGORIES VIEWS DATA (ADMIN, MANAGER, STAFF)
+        Route::middleware('role:admin,manajer_gudang,staff_gudang')
+            ->controller(CategoryController::class)
+            ->group(function () {
+                Route::get('categories-management', 'index')->name('categories-management.index');
+                Route::get('categories-management/bin', 'bin')->name('categories-management.bin');
+            });
 
-            // Data Table Utama Categories
-            Route::get('categories-management', 'index')->name('categories-management.index');
+        // CATEGORIES CRUD (ADMIN ONLY)
+        Route::middleware('admin')
+            ->controller(CategoryController::class)
+            ->group(function () {
+                Route::post('categories-management', 'store')->name('categories-management.store');
+                Route::put('categories-management/{category}', 'update')->name('categories-management.update');
+                Route::delete('categories-management/{category}', 'destroy')->name('categories-management.destroy');
+                Route::post('categories-management/{id}/restore', 'restore')->name('categories-management.restore');
+            });
 
-            // Data Table Bin Categories
-            Route::get('categories-management/bin', 'bin')->name('categories-management.bin');
-        });
 
+        // PRODUCTS
+        // PRODUCTS VIEWS DATA (ADMIN, MANAGER, STAFF)
+        Route::middleware('role:admin,manajer_gudang,staff_gudang')
+            ->controller(ProductController::class)
+            ->group(function () {
+                Route::get('products-management', 'index')->name('products-management.index');
+                Route::get('products-management/bin', 'bin')->name('products-management.bin');
+            });
 
-        // Categories Management CRUD (Admin Only)
-        Route::middleware(['admin'])->controller(CategoryController::class)->group(function () {
-
-        // Main CRUD
-        Route::post('categories-management', 'store')->name('categories-management.store');
-        Route::put('categories-management/{category}', 'update')->name('categories-management.update');
-        Route::delete('categories-management/{category}', 'destroy')->name('categories-management.destroy');
-
-        // Restore dari Bin
-        Route::post('categories-management/{id}/restore', 'restore')->name('categories-management.restore');
-    });
+        // PRODUCTS CRUD (Admin + Manager)
+        Route::middleware('role:admin,manajer_gudang')
+            ->controller(ProductController::class)
+            ->group(function () {
+                
+                Route::post('products-management', 'store')->name('products-management.store');
+                Route::put('products-management/{product}', 'update')->name('products-management.update');
+                Route::delete('products-management/{product}', 'destroy')->name('products-management.destroy');
+                Route::post('products-management/{id}/restore', 'restore')->name('products-management.restore');
+            });
 
     });

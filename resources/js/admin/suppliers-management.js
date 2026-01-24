@@ -284,6 +284,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     binSuppliersDataTable.column(0).nodes()
                         .each((cell, i) => cell.innerHTML = i + 1);
                 }).draw();
+                
             });
 
             return;

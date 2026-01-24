@@ -6,7 +6,7 @@
         <div class="modal-box w-full max-w-2xl bg-white rounded-lg shadow-xl transform -translate-y-6 opacity-0 transition-all duration-300 ease-out">
 
             <!-- HEADER -->
-            <div class="relative px-6 py-4 bg-sky-400 text-white rounded-t-lg">
+            <div class="relative px-6 py-4 bg-blue-600 text-white rounded-t-lg">
                 <h2 class="text-lg font-semibold">User View</h2>
 
                 <button
