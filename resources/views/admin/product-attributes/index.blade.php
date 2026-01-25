@@ -1,44 +1,34 @@
 @extends('layouts.app')
 
-@section('title', 'Products Management')
+@section('title', 'Product Attributes')
 
 @section('content')
 
-
-
-<!-- Flag Role -->
 @php
-
     $role = auth()->user()->role;
     $isCrud = in_array($role,['admin','manajer_gudang']);
-
 @endphp
-
 
 <div class="space-y-6">
 
     <!-- ================= HEADER ================= -->
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-
-        <!-- Title -->
         <div>
             <h1 class="text-2xl font-semibold text-gray-900">
-                Products Management
+                Product Attributes
             </h1>
             <p class="text-sm text-gray-600 mt-1">
-                Manage your products
+                Manage your product attributes
             </p>
         </div>
 
-        @if ($isCrud)
+        @if($isCrud)
 
-            <!-- Action Buttons -->
             <div class="flex gap-2">
-
-                <!-- ADD PRODUCT -->
+                <!-- ADD -->
                 <button
                     type="button"
-                    id="btnAddProduct"
+                    id="btnAddAttribute"
                     class="inline-flex items-center gap-2 px-4 py-2
                             text-sm font-medium text-white
                             bg-blue-600 rounded-md
@@ -48,21 +38,20 @@
                             transition">
 
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24">
-                        <path stroke="currentColor" stroke-width="2"
-                            d="M5 12h14m-7 7V5"/>
+                            <path stroke="currentColor" stroke-width="2" d="M5 12h14m-7 7V5"/>
                     </svg>
 
-                    Add Product
+                    Add Attribute
                 </button>
 
-                <!-- BIN PRODUCT -->
-                <button
+                <!-- BIN -->
+                <button 
                     type="button"
-                    id="btn-open-bin-product"
+                    id="btn-open-bin-attribute"
                     class="inline-flex items-center gap-2 px-4 py-2
-                        text-sm font-medium text-white
-                        bg-gray-600 rounded-md
-                        hover:bg-gray-700 transition">
+                            text-sm font-medium text-white
+                            bg-gray-600 rounded-md
+                            hover:bg-gray-700 transition">
 
                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24">
                         <path stroke="currentColor" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"/>
@@ -70,123 +59,83 @@
 
                     Bin
                 </button>
-
             </div>
-        
+
         @endif
 
     </div>
 
-    <!-- ================= PRODUCT TABLE ================= -->
+    <!-- ================= PRODUCT ATTRIBUTE TABLE ================= -->
     <div class="relative bg-white border border-gray-200 rounded-lg shadow-sm">
 
         <div class="overflow-x-auto">
-            <table id="productsManagementTable"
+            <table id="productAttributesTable"
                    class="w-full text-sm text-left text-gray-700 border-collapse table-crud">
-
                 <!-- Table Head -->
                 <thead class="bg-blue-600 text-white border-b border-blue-700">
                     <tr class="uppercase tracking-wide text-xs font-semibold">
                         <th class="px-5 py-4 text-center text-xs font-semibold text-white text-center col-action">No</th>
-                        <th class="px-5 py-4 text-xs font-semibold text-white">SKU</th>
                         <th class="px-5 py-4 text-xs font-semibold text-white">Name</th>
-                        <th class="px-5 py-4 text-xs font-semibold text-white">Purchase</th>
-                        <th class="px-5 py-4 text-xs font-semibold text-white">Selling</th>
-                        <th class="px-5 py-4 text-xs font-semibold text-white">Status</th>
+                        <th class="px-5 py-4 text-xs font-semibold text-white">Slug</th>
                         <th class="px-5 py-4 text-xs font-semibold text-white text-center col-action">Action</th>
                     </tr>
                 </thead>
 
                 <!-- Table Body -->
                 <tbody>
-                    @foreach ($products as $product)
-                        <tr class="border-b hover:bg-gray-100 transition">
+                    @foreach($attributes as $attr)
+                        <tr class="border-b hover:bg-gray-50">
 
                             <!-- No -->
-                            <td class="px-5 py-4 font-medium text-gray-900 text-center"></td>
-
-                            <!-- SKU -->
-                            <td class="px-5 py-4 font-medium text-gray-900">
-                                {{ $product->sku }}
-                            </td>
+                            <td class="px-4 py-3 text-center"></td>
 
                             <!-- Name -->
-                            <td class="px-5 py-4 font-medium text-gray-900">
-                                {{ $product->name }}
-                            </td>
+                            <td class="px-4 py-3">{{ $attr->name }}</td>
 
-                            <!-- Purchase -->
-                            <td class="px-5 py-4 font-medium text-gray-900">
-                                Rp {{ number_format($product->purchase_price, 2, ',', '.') }}
-                            </td>
-
-                            <!-- Selling -->
-                            <td class="px-5 py-4 font-medium text-gray-900">
-                                Rp {{ number_format($product->selling_price, 2, ',', '.') }}
-                            </td>
-
-                            <!-- Status -->
-                            <td class="px-5 py-4 text-center">
-                                @if ($product->is_active)
-                                    <span class="px-3 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">
-                                        Active
-                                    </span>
-                                @else
-                                    <span class="px-3 py-1 text-xs font-semibold text-red-700 bg-red-100 rounded-full">
-                                        Inactive
-                                    </span>
-                                @endif
-                            </td>
+                            <!-- Slug -->
+                            <td class="px-4 py-3 text-gray-500">{{ $attr->slug }}</td>
 
                             <!-- Action -->
-                                <td class="px-5 py-4 text-center">
-                                    <div class="relative inline-block text-left">
+                            <td class="px-4 py-3 text-center">
+                                <div class="relative inline-block">
 
-                                        <!-- TOGGLE -->
-                                        <button
-                                            type="button"
-                                            class="action-toggle inline-flex items-center gap-1
-                                                    px-3 py-1.5 text-xs
-                                                    bg-gray-100 text-gray-700
-                                                    rounded hover:bg-gray-200">
-                                            Actions
+                                    <!-- Toggle -->
+                                    <button 
+                                        type="button"
+                                        class="action-toggle inline-flex items-center gap-1
+                                                px-3 py-1.5 text-xs
+                                                bg-gray-100 text-gray-700
+                                                rounded hover:bg-gray-200">
+                                        Actions
 
-                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24">
-                                                <path stroke="currentColor" stroke-width="2" d="M6 9l6 6 6-6"/>
-                                            </svg>
-                                        </button>
+                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-width="2" d="M6 9l6 6 6-6"/>
+                                        </svg>
+                                    </button>
 
-                                        <!-- MENU -->
-                                        <div class="action-menu hidden absolute right-0 top-full mt-2
-                                                    w-44 bg-white border rounded-lg shadow-lg z-50">
+                                    <!-- MENU -->
+                                    <div class="action-menu hidden absolute right-0 top-full mt-2
+                                                w-44 bg-white border rounded-lg shadow-lg z-50">
 
+                                    <!-- DATA MODAL PAYLOAD -->
+                                        @php
+                                            $viewProductAttributePayload = [
+                                                "id" => $attr->id,
+                                                "name" => $attr->name,
+                                                "slug" => $attr->slug,
+                                                "created_at" => $attr->created_at?->format('d M Y H:i'),
+                                                "updated_at" => $attr->updated_at?->format('d M Y H:i'),
+                                            ];
+                                        @endphp
 
-                                        <!-- DATA MODAL PAYLOAD -->
-                                            @php
-                                                $viewProductPayload = [
-                                                    "id" => $product->id,
-                                                    "category_id" => $product->category_id,
-                                                    "supplier_id" => $product->supplier_id,
-                                                    "name" => $product->name,
-                                                    "sku" => $product->sku,
-                                                    "description" => $product->description,
-                                                    "purchase_price" => $product->purchase_price,
-                                                    "selling_price" => $product->selling_price,
-                                                    "image" => $product->image,
-                                                    "minimum_stock" => $product->minimum_stock,
-                                                    "is_active" => $product->is_active,
-                                                    "created_at" => $product->created_at?->format('d M Y H:i'),
-                                                    "updated_at" => $product->updated_at?->format('d M Y H:i'),
-                                                ];
-                                            @endphp
+                                        @if (!$isCrud)
+                                            <!-- SELAIN ADMIN DAN MANAGER HANYA VIEW -->
 
-                                            @if (!$isCrud)
-                                            <!-- SELAIN ADMIN HANYA VIEW -->
                                             <button
                                                 type="button"
                                                 data-action="view"
                                                 class="flex w-full items-center gap-2 px-4 py-2 text-sm text-blue-600 hover:bg-blue-50"
-                                                data-product='@json($viewProductPayload)'>
+                                                data-attribute='@json($viewProductAttributePayload)'>
 
                                                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-width="2"
@@ -199,16 +148,16 @@
                                                 View
                                             </button>
                                             
-                                            @endif
+                                        @endif
 
-                                            @if ($isCrud)
+                                        @if($isCrud)
+                                            <!-- JIKA ADMIN + MANAGER SEMUA CRUD -->
 
-                                            <!-- JIKA ADMIN SEMUA CRUD -->
                                             <button
                                                 type="button"
                                                 data-action="view"
                                                 class="flex w-full items-center gap-2 px-4 py-2 text-sm text-blue-600 hover:bg-blue-50"
-                                                data-product='@json($viewProductPayload)'>
+                                                data-attribute='@json($viewProductAttributePayload)'>
 
                                                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-width="2"
@@ -226,7 +175,7 @@
                                                 type="button"
                                                 data-action="edit"
                                                 class="flex w-full items-center gap-2 px-4 py-2 text-sm text-yellow-600 hover:bg-yellow-50"
-                                                data-product='@json($product)'>
+                                                data-attribute='@json($viewProductAttributePayload)'>
 
                                                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-width="2"
@@ -239,7 +188,7 @@
                                             </button>
 
                                             <!-- DELETE -->
-                                            <form action="{{ route('admin.products-management.destroy', $product->id) }}"
+                                            <form action="{{ route('admin.product-attributes.destroy', $attr->id) }}"
                                                 method="POST">
                                                 @csrf
                                                 @method('DELETE')
@@ -247,8 +196,8 @@
                                                 <button
                                                     type="button"
                                                     class="btn-confirm flex w-full items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50"
-                                                    data-title="Delete product?"
-                                                    data-text="Product will be moved to Bin"
+                                                    data-title="Delete attribute?"
+                                                    data-text="Attribute will be moved to Bin"
                                                     data-confirm="Yes, Delete"
                                                     data-color="#dc2626">
 
@@ -262,43 +211,38 @@
                                                     Delete
                                                 </button>
                                             </form>
-                                            
-                                            @endif
 
-                                        </div>
+                                        @endif
+
                                     </div>
-                                </td>
-                            
+                                </div>
+                            </td>
                         </tr>
-                    
                     @endforeach
-                    
                 </tbody>
-
 
             </table>
         </div>
-
     </div>
 
 </div>
 
-<!-- ================= DATATABLES ================= -->
+<!-- DATATABLE INIT -->
 <x-datatable-init
-    id="productsManagementTable"
+    id="productAttributesTable"
     :columnDefs="[
-        ['orderable'=>false,'targets'=>[0,6]]
+        ['orderable'=>false,'targets'=>[0,3]]
     ]"
 />
 
-<!-- ================= MODALS ================= -->
-@include('admin.products-management.partials.modal-view')
-@include('admin.products-management.partials.modal-create')
-@include('admin.products-management.partials.modal-edit')
-@include('admin.products-management.partials.modal-bin')
+<!-- MODALS -->
+@include('admin.product-attributes.partials.modal-create')
+@include('admin.product-attributes.partials.modal-edit')
+@include('admin.product-attributes.partials.modal-view')
+@include('admin.product-attributes.partials.modal-bin')
 
 @endsection
 
 @push('scripts')
-    @vite('resources/js/admin/products-management.js')
+    @vite('resources/js/admin/product-attributes.js')
 @endpush
