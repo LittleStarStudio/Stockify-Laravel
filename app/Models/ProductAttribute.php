@@ -11,14 +11,9 @@ class ProductAttribute extends Model
     use SoftDeletes;
     
     protected $fillable = [
-        'product_id',
         'name',
-        'value'
+        'slug'
     ];
 
-    public function product()
-    {
-        return $this->belongsTo(Product::class);
-    }
 }
 

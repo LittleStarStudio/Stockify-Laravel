@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Admin\ProductController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ProfileController;
@@ -8,6 +7,8 @@ use App\Http\Controllers\Admin\UserRequestController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ProductAttributeController;
 
 /*
 |---------------------------------------------------------------------------
@@ -104,7 +105,7 @@ Route::middleware(['auth', 'approved'])
             });
 
 
-        // PRODUCTS
+        // PRODUCTS MANAGEMENT
         // PRODUCTS VIEWS DATA (ADMIN, MANAGER, STAFF)
         Route::middleware('role:admin,manajer_gudang,staff_gudang')
             ->controller(ProductController::class)
@@ -113,7 +114,7 @@ Route::middleware(['auth', 'approved'])
                 Route::get('products-management/bin', 'bin')->name('products-management.bin');
             });
 
-        // PRODUCTS CRUD (Admin + Manager)
+        // PRODUCTS CRUD (ADMIN + MANAGER)
         Route::middleware('role:admin,manajer_gudang')
             ->controller(ProductController::class)
             ->group(function () {
@@ -122,6 +123,26 @@ Route::middleware(['auth', 'approved'])
                 Route::put('products-management/{product}', 'update')->name('products-management.update');
                 Route::delete('products-management/{product}', 'destroy')->name('products-management.destroy');
                 Route::post('products-management/{id}/restore', 'restore')->name('products-management.restore');
+            });
+
+        // PRODUCT ATTRIBUTES
+        // PRODUCT ATTRIBUTES VIEWS DATA (ADMIN, MANAGER, STAFF)
+        Route::middleware('role:admin,manajer_gudang,staff_gudang')
+            ->controller(ProductAttributeController::class)
+            ->group(function () {
+                Route::get('product-attributes', 'index')->name('product-attributes.index');
+                Route::get('product-attributes/bin', 'bin')->name('product-attributes.bin');
+            });
+
+        // PRODUCT ATTRIBUTES CRUD (ADMIN + MANAGER)
+        Route::middleware('role:admin,manajer_gudang')
+            ->controller(ProductAttributeController::class)
+            ->group(function () {
+                
+                Route::post('product-attributes', 'store')->name('product-attributes.store');
+                Route::put('product-attributes/{attribute}', 'update')->name('product-attributes.update');
+                Route::delete('product-attributes/{attribute}', 'destroy')->name('product-attributes.destroy');
+                Route::post('product-attributes/{id}/restore', 'restore')->name('product-attributes.restore');
             });
 
     });
