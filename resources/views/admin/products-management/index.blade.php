@@ -92,6 +92,7 @@
                         <th class="px-5 py-4 text-xs font-semibold text-white">Name</th>
                         <th class="px-5 py-4 text-xs font-semibold text-white">Purchase</th>
                         <th class="px-5 py-4 text-xs font-semibold text-white">Selling</th>
+                        <th class="px-5 py-4 text-xs font-semibold text-white">Stock</th>
                         <th class="px-5 py-4 text-xs font-semibold text-white">Status</th>
                         <th class="px-5 py-4 text-xs font-semibold text-white text-center col-action">Action</th>
                     </tr>
@@ -123,6 +124,11 @@
                             <!-- Selling -->
                             <td class="px-5 py-4 font-medium text-gray-900">
                                 Rp {{ number_format($product->selling_price, 2, ',', '.') }}
+                            </td>
+
+                            <!-- Stock -->
+                            <td class="px-5 py-4 font-medium text-gray-900">
+                                {{ $product->current_stock }}
                             </td>
 
                             <!-- Status -->
@@ -241,6 +247,20 @@
                                                 </svg>
 
                                                 Edit
+                                            </button>
+
+                                            <!-- STOCK -->
+                                            <button
+                                                type="button"
+                                                data-action="stock"
+                                                class="flex w-full items-center gap-2 px-4 py-2 text-sm text-green-600 hover:bg-green-50"
+                                                data-id="{{ $product->id }}">
+
+                                                <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                    <path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M10 12v1h4v-1m4 7H6a1 1 0 0 1-1-1V9h14v9a1 1 0 0 1-1 1ZM4 5h16a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"/>
+                                                </svg>
+
+                                                Stock
                                             </button>
 
                                             <!-- DELETE -->

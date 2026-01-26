@@ -81,7 +81,7 @@
                     </li>
                 @endif
 
-
+                <!-- SUPPLIERS MENU -->
                 <li>
                     <a href="{{ route('admin.suppliers-management.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-base {{ request()->is('admin/suppliers-management*') ? 'bg-sky-300 font-semibold' : 'hover:bg-sky-200' }}">
                         <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -91,6 +91,7 @@
                     </a>
                 </li>
                 
+                <!-- CATEGORIES MENU -->
                 <li>
                     <a href="{{ route('admin.categories-management.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-base {{ request()->is('admin/categories-management*') ? 'bg-sky-300 font-semibold' : 'hover:bg-sky-200' }}">
                         <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -100,32 +101,130 @@
                     </a>
                 </li>
 
-                {{-- <li>
-                    <a href="/products" class="flex items-center gap-3 px-3 py-2 rounded-base {{ request()->is('products') ? 'bg-sky-300 font-semibold' : 'hover:bg-sky-200' }}">
-                        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 4h1.5L9 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-8.5-3h9.25L19 7H7.312"/>
-                        </svg>
-                        <span>Products</span>
-                    </a>
-                </li> --}}
+                <!-- PRODUCTS MENU -->
+                    <li>
 
-                {{-- <li>
-                    <a href="/stok" class="flex items-center gap-3 px-3 py-2 rounded-base {{ request()->is('stok') ? 'bg-sky-300 font-semibold' : 'hover:bg-sky-200' }}">
-                        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M10 12v1h4v-1m4 7H6a1 1 0 0 1-1-1V9h14v9a1 1 0 0 1-1 1ZM4 5h16a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"/>
-                        </svg>
-                        <span>Stok</span>
-                    </a>
-                </li> --}}
+                        <button type="button"
+                                class="flex items-center w-full gap-3 px-3 py-2 rounded-base
+                                transition
+                                {{ request()->is('admin/products-management*', 'admin/product-attributes*')
+                                    ? 'bg-sky-300 font-semibold'
+                                    : 'hover:bg-sky-200' }}"
+                                aria-controls="dropdown-products"
+                                data-collapse-toggle="dropdown-products">
 
-                {{-- <li>
-                    <a href="/report" class="flex items-center gap-3 px-3 py-2 rounded-base {{ request()->is('report') ? 'bg-sky-300 font-semibold' : 'hover:bg-sky-200' }}">
-                        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 4h3a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h3m0 3h6m-3 5h3m-6 0h.01M12 16h3m-6 0h.01M10 3v4h4V3h-4Z"/>
-                        </svg>
-                        <span>Report</span>
-                    </a>
-                </li> --}}
+                            {{-- ICON --}}
+                            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 4h1.5L9 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-8.5-3h9.25L19 7H7.312"/>
+                            </svg>
+
+                            {{-- LABEL --}}
+                            <span class="flex-1 text-left whitespace-nowrap">
+                                Products
+                            </span>
+
+                            {{-- ARROW --}}
+                            <svg class="w-4 h-4 transition-transform duration-300"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-width="2"
+                                    d="m19 9-7 7-7-7"/>
+                            </svg>
+                        </button>
+
+                        {{-- SUB MENU --}}
+                        <ul id="dropdown-products"
+                            class="hidden py-1 space-y-1">
+
+                            {{-- PRODUCTS MANAGEMENT --}}
+                            <li>
+                                <a href="{{ route('admin.products-management.index') }}"
+                                    class="flex items-center ps-11 pe-3 py-2 rounded-base text-sm
+                                    {{ request()->is('admin/products-management*')
+                                        ? 'bg-sky-300 font-semibold'
+                                        : 'hover:bg-sky-200' }}">
+                                    Products Management
+                                </a>
+                            </li>
+
+                            {{-- PRODUCT ATTRIBUTES --}}
+                            <li>
+                                <a href="{{ route('admin.product-attributes.index') }}"
+                                    class="flex items-center ps-11 pe-3 py-2 rounded-base text-sm
+                                    {{ request()->is('admin/product-attributes*')
+                                        ? 'bg-sky-300 font-semibold'
+                                        : 'hover:bg-sky-200' }}">
+                                    Product Attributes
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li>
+
+                    <!-- STOCK MENU -->
+                    <li>
+
+                        <button type="button"
+                                class="flex items-center w-full gap-3 px-3 py-2 rounded-base
+                                transition
+                                {{ request()->is('admin/stock-transactions*', 'admin/stock-transactions*')
+                                    ? 'bg-sky-300 font-semibold'
+                                    : 'hover:bg-sky-200' }}"
+                                aria-controls="dropdown-stocks"
+                                data-collapse-toggle="dropdown-stocks">
+
+                            {{-- ICON --}}
+                            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 4h1.5L9 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-8.5-3h9.25L19 7H7.312"/>
+                            </svg>
+
+                            {{-- LABEL --}}
+                            <span class="flex-1 text-left whitespace-nowrap">
+                                Stocks
+                            </span>
+
+                            {{-- ARROW --}}
+                            <svg class="w-4 h-4 transition-transform duration-300"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-width="2"
+                                    d="m19 9-7 7-7-7"/>
+                            </svg>
+                        </button>
+
+                        {{-- SUB MENU --}}
+                        <ul id="dropdown-stocks"
+                            class="hidden py-1 space-y-1">
+
+                            
+                            {{-- STOCK REQUEST --}}
+                            <li>
+                                <a href="{{ route('admin.stock-transactions.request') }}"
+                                class="flex items-center ps-11 pe-3 py-2 rounded-base text-sm
+                                {{ request()->is('admin/stock-transactions*')
+                                        ? 'bg-sky-300 font-semibold'
+                                        : 'hover:bg-sky-200' }}">
+                                    Stock Request
+                                </a>
+                            </li>
+
+                            {{-- STOCK TRANSACTION --}}
+                            <li>
+                                <a href="{{ route('admin.stock-transactions.index') }}"
+                                    class="flex items-center ps-11 pe-3 py-2 rounded-base text-sm
+                                    {{ request()->is('admin/stock-transactions*')
+                                        ? 'bg-sky-300 font-semibold'
+                                        : 'hover:bg-sky-200' }}">
+                                    Stock Management
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li>
+
+                    
 
                 <li class="py-2">
                     <div class="border-t border-sky-300"></div>

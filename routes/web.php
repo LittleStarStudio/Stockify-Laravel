@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProductAttributeController;
+use App\Http\Controllers\Admin\StockTransactionController;
 
 /*
 |---------------------------------------------------------------------------
@@ -144,5 +145,25 @@ Route::middleware(['auth', 'approved'])
                 Route::delete('product-attributes/{attribute}', 'destroy')->name('product-attributes.destroy');
                 Route::post('product-attributes/{id}/restore', 'restore')->name('product-attributes.restore');
             });
+
+        // STOCK
+        Route::middleware('role:admin,manajer_gudang,staff_gudang')
+            ->prefix('stock-transactions')
+            ->name('stock-transactions.')
+            ->controller(StockTransactionController::class)
+            ->group(function () {
+
+                // STOCK MANAGEMENT
+                Route::get('/', 'index')->name('index');
+
+                //STOCK REQUEST
+                Route::get('/request', 'pending')->name('pending'); 
+
+                Route::post('/', 'store')->name('store');
+                Route::post('/{id}/approve', 'approve')->name('approve');
+                Route::post('/{id}/reject', 'reject')->name('reject');
+        });
+
+
 
     });

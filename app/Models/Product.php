@@ -47,6 +47,21 @@ class Product extends Model
         return $this->hasMany(StockTransaction::class);
     }
 
+    public function getCurrentStockAttribute()
+    {
+        $in = $this->stockTransactions()
+            ->where('type','IN')
+            ->where('status','RECEIVED')
+            ->sum('quantity');
+
+        $out = $this->stockTransactions()
+            ->where('type','OUT')
+            ->where('status','ISSUED')
+            ->sum('quantity');
+
+        return $in - $out;
+    }
+
     public function attributeValues()
     {
         return $this->hasMany(ProductAttributeValue::class);
