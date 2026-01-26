@@ -128,6 +128,19 @@
 
                             </div>
 
+                            <!-- ATTRIBUTES -->
+                            <div>
+                                <label class="text-sm text-gray-500">Attributes</label>
+
+                                <div id="attr-wrapper-edit" class="space-y-2 mt-2"></div>
+
+                                <button type="button"
+                                        id="btnAddAttrEdit"
+                                        class="mt-2 text-blue-600 text-sm hover:underline">
+                                    + Add Attribute
+                                </button>
+                            </div>
+
                             <!-- DESCRIPTION -->
                             <div>
                                 <label class="text-sm text-gray-500">Description</label>

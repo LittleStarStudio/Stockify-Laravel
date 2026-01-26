@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Supplier;
+use App\Models\ProductAttribute;
 
 use Illuminate\View\View;
+use Illuminate\Support\Facades\DB;
 
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
@@ -22,19 +25,20 @@ class ProductController extends Controller
 
     public function index(): View
     {
-        $products = Product::with(['category','supplier'])
+        $products = Product::with(['category','supplier','attributeValues.attribute'])
             ->whereNull('deleted_at')
             ->latest()
             ->get();
 
-        // Data DARI Table luar
         $categories = Category::orderBy('name')->get();
         $suppliers  = Supplier::orderBy('name')->get();
+        $attributes = ProductAttribute::orderBy('name')->get();
 
         return view(
             'admin.products-management.index',
-            compact('products', 'categories', 'suppliers')
+            compact('products','categories','suppliers','attributes')
         );
+
     }
 
     public function store(StoreProductRequest $request)
@@ -46,7 +50,21 @@ class ProductController extends Controller
                 ->store('products', 'public');
         }
 
-        Product::create($data);
+        $product = Product::create($data);
+
+        if ($request->filled('attributes')) {
+
+            $clean = collect($request->attributes)
+                    ->unique('id')
+                    ->filter(fn($r) => !empty($r['id']) && !empty($r['value']));
+
+            foreach ($clean as $row) {
+                $product->attributeValues()->create([
+                    'attribute_id' => $row['id'],
+                    'value' => $row['value'],
+                ]);
+            }
+        }
 
         return response()->json(['message'=>'Product created']);
     }
@@ -60,7 +78,26 @@ class ProductController extends Controller
                 ->store('products', 'public');
         }
 
-        $product->update($data);
+        DB::transaction(function () use ($product, $data, $request) {
+
+            $product->update($data);
+            $product->attributeValues()->delete();
+
+        });
+
+        if ($request->filled('attributes')) {
+
+            $clean = collect($request->attributes)
+                    ->unique('id')
+                    ->filter(fn($r) => !empty($r['id']) && !empty($r['value']));
+
+            foreach ($clean as $row) {
+                $product->attributeValues()->create([
+                    'attribute_id' => $row['id'],
+                    'value' => $row['value'],
+                ]);
+            }
+        }
 
         return response()->json(['message'=>'Product updated']);
     }

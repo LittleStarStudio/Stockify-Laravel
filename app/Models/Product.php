@@ -29,6 +29,8 @@ class Product extends Model
         'is_active'      => 'boolean',
     ];
 
+    protected $with = ['attributeValues.attribute'];
+
     // RELATIONS
     public function category()
     {
@@ -40,14 +42,17 @@ class Product extends Model
         return $this->belongsTo(Supplier::class);
     }
 
-    public function attributes()
-    {
-        return $this->hasMany(ProductAttribute::class);
-    }
-
     public function stockTransactions()
     {
         return $this->hasMany(StockTransaction::class);
     }
+
+    public function attributeValues()
+    {
+        return $this->hasMany(ProductAttributeValue::class);
+    }
+
+
+    
 }
 

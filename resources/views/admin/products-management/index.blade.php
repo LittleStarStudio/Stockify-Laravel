@@ -177,6 +177,11 @@
                                                     "is_active" => $product->is_active,
                                                     "created_at" => $product->created_at?->format('d M Y H:i'),
                                                     "updated_at" => $product->updated_at?->format('d M Y H:i'),
+                                                    
+                                                    "attribute_values" => $product->attributeValues->map(fn($v) => [
+                                                        "attribute_id" => (int)$v->attribute_id,
+                                                        "value" => (string)$v->value
+                                                    ])->values(),
                                                 ];
                                             @endphp
 
@@ -226,7 +231,7 @@
                                                 type="button"
                                                 data-action="edit"
                                                 class="flex w-full items-center gap-2 px-4 py-2 text-sm text-yellow-600 hover:bg-yellow-50"
-                                                data-product='@json($product)'>
+                                                data-product='@json($viewProductPayload)'>
 
                                                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-width="2"
@@ -298,6 +303,14 @@
 @include('admin.products-management.partials.modal-bin')
 
 @endsection
+
+<script>
+    window.attributesOptions = `{!!
+        collect($attributes)->map(fn($a) =>
+            "<option value='{$a->id}'>{$a->name}</option>"
+        )->implode('')
+    !!}`;
+</script>
 
 @push('scripts')
     @vite('resources/js/admin/products-management.js')

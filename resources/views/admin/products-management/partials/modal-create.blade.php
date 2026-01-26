@@ -128,6 +128,33 @@
 
                             </div>
 
+                            <!-- ATTRIBUTES -->
+                            <div>
+                                <label class="text-sm text-gray-500">Attributes</label>
+
+                                <div id="attr-wrapper-create" class="space-y-2 mt-2">
+                                    <div class="flex gap-2">
+                                        <select name="attributes[0][id]" class="input w-1/2">
+                                            <option value="">-- Attribute --</option>
+                                            @foreach($attributes as $a)
+                                                <option value="{{ $a->id }}">{{ $a->name }}</option>
+                                            @endforeach
+                                        </select>
+
+                                        <input type="text"
+                                            name="attributes[0][value]"
+                                            placeholder="Value"
+                                            class="input w-1/2">
+                                    </div>
+                                </div>
+
+                                <button type="button"
+                                        id="btnAddAttr"
+                                        class="mt-2 text-blue-600 text-sm hover:underline">
+                                    + Add Attribute
+                                </button>
+                            </div>
+
                             <!-- DESCRIPTION -->
                             <div>
                                 <label class="text-sm text-gray-500">Description</label>

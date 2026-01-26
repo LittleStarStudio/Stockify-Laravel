@@ -5,6 +5,7 @@ function formatRupiahView(num) {
     return "Rp " + Number(num).toLocaleString("id-ID");
 }
 
+
 function bindRupiah(displayId, hiddenId) {
     const display = document.getElementById(displayId);
     const hidden = document.getElementById(hiddenId);
@@ -78,6 +79,7 @@ function bindRupiah(displayId, hiddenId) {
     });
 }
 
+
 function resetRupiahState(...ids) {
     ids.forEach(id => {
         if (rupiahState[id] !== undefined) {
@@ -88,6 +90,38 @@ function resetRupiahState(...ids) {
         if (display) display.value = "";
     });
 }
+
+
+let attrIndex = 1;
+
+function addAttributeRow(id = "", value = "", target = "create") {
+
+    const wrap = document.getElementById(target === "edit" ? "attr-wrapper-edit" : "attr-wrapper-create");
+
+    if (!wrap) return;
+
+    const row = document.createElement("div");
+    row.className = "flex gap-2 mt-2";
+
+    row.innerHTML = `
+        <select name="attributes[${attrIndex}][id]" class="input w-1/2">
+            ${window.attributesOptions}
+        </select>
+
+        <input type="text"
+               name="attributes[${attrIndex}][value]"
+               value="${value}"
+               placeholder="Value"
+               class="input w-1/2">
+    `;
+
+    if (id) row.querySelector("select").value = id;
+
+    wrap.appendChild(row);
+    attrIndex++;
+}
+
+
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -137,11 +171,34 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("edit-image-placeholder")
     );
 
+    // MONEY DISPAY FORMATED
     bindRupiah("create-harga-beli-display", "create-harga-beli");
     bindRupiah("create-harga-jual-display", "create-harga-jual");
 
     bindRupiah("edit-harga-beli-display", "edit-harga-beli");
     bindRupiah("edit-harga-jual-display", "edit-harga-jual");
+
+    // PRODUCT ATTRIBUTES
+    document.getElementById("btnAddAttr")?.addEventListener("click", () => {
+        addAttributeRow("", "", "create");
+    });
+
+    document.getElementById("btnAddAttrEdit")?.addEventListener("click", () => {
+        addAttributeRow("", "", "edit");
+    });
+
+    document.addEventListener("change", (e) => {
+        if (e.target.name?.includes("[id]")) {
+            const selects = [...document.querySelectorAll("select[name^='attributes']")];
+            const values = selects.map(s => s.value).filter(v => v);
+
+            if (values.filter(v => v === e.target.value).length > 1) {
+                Swal.fire("Duplicate Attribute", "Attribute already used", "warning");
+                e.target.value = "";
+            }
+        }
+    });
+
 
     /* ================= UTILITIES ================= */
 
@@ -186,6 +243,15 @@ document.addEventListener("DOMContentLoaded", () => {
             "edit-harga-beli-display",
             "edit-harga-jual-display"
         );
+
+        const wrapCreate = document.getElementById("attr-wrapper-create");
+        const wrapEdit   = document.getElementById("attr-wrapper-edit");
+
+        if (wrapCreate) wrapCreate.innerHTML = "";
+        if (wrapEdit) wrapEdit.innerHTML = "";
+
+        attrIndex = 1;
+        addAttributeRow("", "", "create");
 
         const form = modal.querySelector("form");
         if (form) form.reset();
@@ -416,6 +482,16 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             document.getElementById("edit-image-filename").textContent = "No file chosen";
+
+            const wrap = document.getElementById("attr-wrapper-edit");
+            wrap.innerHTML = "";
+            attrIndex = 1;
+
+            if (p.attribute_values) {
+                p.attribute_values.forEach(row => {
+                    addAttributeRow(row.attribute_id, row.value, "edit");
+                });
+            }
 
             openModal(document.getElementById("editProductModal"));
             return;

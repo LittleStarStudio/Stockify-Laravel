@@ -6,20 +6,33 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+    
     public function up(): void
     {
         Schema::create('product_attribute_values', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
-        });
-    }
 
-    /**
-     * Reverse the migrations.
-     */
+            $table->foreignId('product_id')
+                ->constrained()
+                ->cascadeOnDelete();
+
+            $table->foreignId('attribute_id')
+                ->constrained('product_attributes')
+                ->cascadeOnDelete();
+
+            $table->string('value');
+            
+            $table->unique(['product_id','attribute_id']);
+
+            $table->index(['product_id']);
+            $table->index(['attribute_id']);
+
+            $table->timestamps();
+        
+            });
+
+    }
+    
     public function down(): void
     {
         Schema::dropIfExists('product_attribute_values');
