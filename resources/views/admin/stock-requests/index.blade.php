@@ -38,12 +38,26 @@
 
             <tbody>
                 @foreach ($transactions as $tx)
-                    <tr class="border-b hover:bg-gray-100 transition">
 
+                    @php
+                    
+                        $currentStock = $tx->product->current_stock;
+                        $isDanger = $tx->type === 'OUT' && $tx->quantity > $currentStock;
+                        $isBig = $tx->quantity >= 50;
+
+                    @endphp
+
+                    <tr class="border-b transition
+                        {{ $isDanger ? 'bg-red-50 hover:bg-red-100' : 'hover:bg-gray-100' }}
+                        {{ $isBig ? 'ring-2 ring-orange-400' : '' }}">
+
+                        <!-- NO -->
                         <td class="px-5 py-4 text-center"></td>
 
+                        <!-- NAME -->
                         <td class="px-5 py-4">{{ $tx->product->name }}</td>
 
+                        <!-- TYPE -->
                         <td class="px-5 py-4">
                             <span class="px-2 py-1 text-xs rounded
                                 {{ $tx->type === 'IN' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
@@ -51,36 +65,60 @@
                             </span>
                         </td>
 
-                        <td class="px-5 py-4">{{ $tx->quantity }}</td>
+                        <!-- QUANTITY -->
+                        <td class="px-5 py-4">
+                            {{ $tx->quantity }}
 
+                            @if($isDanger)
+                                <span class="ml-2 text-xs text-red-600 font-semibold">
+                                    (Over stock!)
+                                </span>
+                            @endif
+                        </td>
+
+                        <!-- NOTE -->
                         <td class="px-5 py-4">{{ $tx->notes ?? '-' }}</td>
 
+                        <!-- USER -->
                         <td class="px-5 py-4">{{ $tx->user->name }}</td>
 
+                        <!-- STATUS -->
                         <td class="px-5 py-4">
                             <span class="px-3 py-1 text-xs font-semibold text-yellow-700 bg-yellow-100 rounded-full">
                                 PENDING
                             </span>
                         </td>
 
+                        <!-- ACTIONS -->
                         <td class="px-5 py-4 text-center space-x-2">
 
                             {{-- APPROVE --}}
                             <form action="{{ route('admin.stock-requests.approve', $tx->id) }}"
                                   method="POST" class="inline-block">
                                 @csrf
-                                <button type="submit"
-                                    class="px-2 py-1 text-xs text-white bg-green-600 rounded hover:bg-green-700">
+                                <button type="button"
+                                        class="btn-stock-confirm px-2 py-1 text-xs text-white bg-green-600 rounded hover:bg-green-700"
+                                        data-title="Approve Stock?"
+                                        data-text="This will update product stock."
+                                        data-confirm="Yes, approve"
+                                        data-color="#16a34a">
+
                                     Approve
                                 </button>
+
                             </form>
 
                             {{-- REJECT --}}
                             <form action="{{ route('admin.stock-requests.reject', $tx->id) }}"
                                   method="POST" class="inline-block">
                                 @csrf
-                                <button type="submit"
-                                    class="px-2 py-1 text-xs text-white bg-red-600 rounded hover:bg-red-700">
+                                <button type="button"
+                                        class="btn-stock-confirm px-2 py-1 text-xs text-white bg-red-600 rounded hover:bg-red-700"
+                                        data-title="Reject Stock?"
+                                        data-text="This request will be rejected."
+                                        data-confirm="Yes, reject"
+                                        data-color="#dc2626">
+
                                     Reject
                                 </button>
                             </form>
@@ -103,3 +141,8 @@
 />
 
 @endsection
+
+@push('scripts')
+    @vite('resources/js/admin/stock-requests.js')
+@endpush
+
