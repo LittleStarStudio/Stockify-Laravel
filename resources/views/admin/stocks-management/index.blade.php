@@ -70,3 +70,7 @@
 />
 
 @endsection
+
+@push('scripts')
+    @vite('resources/js/admin/stocks-management.js')
+@endpush
