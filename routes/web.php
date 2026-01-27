@@ -9,7 +9,11 @@ use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProductAttributeController;
-use App\Http\Controllers\Admin\StockTransactionController;
+use App\Http\Controllers\Admin\StockInputController;
+use App\Http\Controllers\Admin\StockRequestController;
+use App\Http\Controllers\Admin\StockManagementController;
+
+use App\Models\Product;
 
 /*
 |---------------------------------------------------------------------------
@@ -147,23 +151,39 @@ Route::middleware(['auth', 'approved'])
             });
 
         // STOCK
-        Route::middleware('role:admin,manajer_gudang,staff_gudang')
-            ->prefix('stock-transactions')
-            ->name('stock-transactions.')
-            ->controller(StockTransactionController::class)
+        // STOCK INPUT (STAFF)
+        Route::middleware('role:admin,staff_gudang')
+            ->controller(StockInputController::class)
             ->group(function () {
+                Route::get('stock-inputs', 'index')->name('stock-inputs.index');
+                Route::post('stock-inputs', 'store')->name('stock-inputs.store');
 
-                // STOCK MANAGEMENT
-                Route::get('/', 'index')->name('index');
+                Route::get('products/{id}/stock', function ($id) {
+                    $p = Product::findOrFail($id);
 
-                //STOCK REQUEST
-                Route::get('/request', 'pending')->name('pending'); 
+                    return response()->json([
+                        'current_stock' => $p->current_stock,
+                        'minimum_stock' => $p->minimum_stock,
+                    ]);
+                });
 
-                Route::post('/', 'store')->name('store');
-                Route::post('/{id}/approve', 'approve')->name('approve');
-                Route::post('/{id}/reject', 'reject')->name('reject');
-        });
+            });
 
+        // STOCK REQUEST (ADMIN + MANAGER)
+        Route::middleware('role:admin,manajer_gudang')
+            ->controller(StockRequestController::class)
+            ->group(function () {
+                Route::get('stock-requests', 'index')->name('stock-requests.index');
+                Route::post('stock-requests/{id}/approve', 'approve')->name('stock-requests.approve');
+                Route::post('stock-requests/{id}/reject', 'reject')->name('stock-requests.reject');
+            });
+
+        // STOCK MANAGEMENT (ADMIN + MANAGER)
+        Route::middleware('role:admin,manajer_gudang')
+            ->controller(StockManagementController::class)
+            ->group(function () {
+                Route::get('stocks-management', 'index')->name('stocks-management.index');
+            });
 
 
     });

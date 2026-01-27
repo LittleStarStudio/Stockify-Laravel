@@ -162,29 +162,25 @@
                         </ul>
                     </li>
 
-                    <!-- STOCK MENU -->
+                    {{-- STOCK MENU --}}
                     <li>
 
                         <button type="button"
-                                class="flex items-center w-full gap-3 px-3 py-2 rounded-base
-                                transition
-                                {{ request()->is('admin/stock-transactions*', 'admin/stock-transactions*')
-                                    ? 'bg-sky-300 font-semibold'
-                                    : 'hover:bg-sky-200' }}"
-                                aria-controls="dropdown-stocks"
-                                data-collapse-toggle="dropdown-stocks">
+                            class="flex items-center w-full gap-3 px-3 py-2 rounded-base
+                            transition
+                            {{ request()->is('admin/stock-*') ? 'bg-sky-300 font-semibold' : 'hover:bg-sky-200' }}"
+                            aria-controls="dropdown-stock"
+                            data-collapse-toggle="dropdown-stock">
 
                             {{-- ICON --}}
-                            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 4h1.5L9 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-8.5-3h9.25L19 7H7.312"/>
+                            <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M10 12v1h4v-1m4 7H6a1 1 0 0 1-1-1V9h14v9a1 1 0 0 1-1 1ZM4 5h16a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"/>
                             </svg>
 
-                            {{-- LABEL --}}
                             <span class="flex-1 text-left whitespace-nowrap">
-                                Stocks
+                                Stock
                             </span>
 
-                            {{-- ARROW --}}
                             <svg class="w-4 h-4 transition-transform duration-300"
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
@@ -195,35 +191,37 @@
                         </button>
 
                         {{-- SUB MENU --}}
-                        <ul id="dropdown-stocks"
-                            class="hidden py-1 space-y-1">
+                        <ul id="dropdown-stock" class="hidden py-1 space-y-1">
 
-                            
+                            {{-- STOCK INPUT --}}
+                            <li>
+                                <a href="{{ route('admin.stock-inputs.index') }}"
+                                    class="flex items-center ps-11 pe-3 py-2 rounded-base text-sm
+                                    {{ request()->is('admin/stock-inputs*') ? 'bg-sky-300 font-semibold' : 'hover:bg-sky-200' }}">
+                                    Stock Input
+                                </a>
+                            </li>
+
                             {{-- STOCK REQUEST --}}
                             <li>
-                                <a href="{{ route('admin.stock-transactions.request') }}"
-                                class="flex items-center ps-11 pe-3 py-2 rounded-base text-sm
-                                {{ request()->is('admin/stock-transactions*')
-                                        ? 'bg-sky-300 font-semibold'
-                                        : 'hover:bg-sky-200' }}">
+                                <a href="{{ route('admin.stock-requests.index') }}"
+                                    class="flex items-center ps-11 pe-3 py-2 rounded-base text-sm
+                                    {{ request()->is('admin/stock-requests*') ? 'bg-sky-300 font-semibold' : 'hover:bg-sky-200' }}">
                                     Stock Request
                                 </a>
                             </li>
 
-                            {{-- STOCK TRANSACTION --}}
+                            {{-- STOCK MANAGEMENT --}}
                             <li>
-                                <a href="{{ route('admin.stock-transactions.index') }}"
+                                <a href="{{ route('admin.stocks-management.index') }}"
                                     class="flex items-center ps-11 pe-3 py-2 rounded-base text-sm
-                                    {{ request()->is('admin/stock-transactions*')
-                                        ? 'bg-sky-300 font-semibold'
-                                        : 'hover:bg-sky-200' }}">
-                                    Stock Management
+                                    {{ request()->is('admin/stocks-management*') ? 'bg-sky-300 font-semibold' : 'hover:bg-sky-200' }}">
+                                    Stocks Management
                                 </a>
                             </li>
 
                         </ul>
                     </li>
-
                     
 
                 <li class="py-2">
