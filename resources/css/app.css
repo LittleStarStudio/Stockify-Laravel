@@ -1,3 +1,96 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/* ================================
+   GLOBAL DATATABLES DESIGN (CRUD)
+================================ */
+
+/* Border kolom & baris */
+.table-crud th,
+.table-crud td {
+    border-right: 1px solid #d1d5db;
+    border-bottom: 1px solid #d1d5db;
+}
+
+/* Hilangkan border kolom terakhir */
+.table-crud th:last-child,
+.table-crud td:last-child {
+    border-right: none;
+}
+
+/* Header */
+.table-crud thead th {
+    border-top: none;
+}
+
+/* Kolom Action center (Header + Isi) */
+.table-crud .col-action {
+    text-align: center !important;
+}
+
+/* Nonaktifkan cursor sort di kolom Action */
+.table-crud th.col-action {
+    cursor: default;
+}
+
+/* Memberi warna baris saat di hover */
+.table-crud tbody tr:hover {
+    background-color: #f9fafb;
+}
+
+/* Animasi dropdown action */
+.action-menu {
+    transform-origin: top right;
+    animation: dropdownFade 0.15s ease-out;
+}
+
+@keyframes dropdownFade {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+
+/* ================================
+   DATATABLES UI SPACING
+================================ */
+
+/* Jarak DataTables dari border card */
+.dataTables_wrapper {
+    padding: 1rem 1.25rem;
+}
+
+/* Jarak bagian atas */
+.dataTables_length,
+.dataTables_filter {
+    margin-bottom: 0.75rem;
+}
+
+/* Jarak bagian bawah */
+.dataTables_info,
+.dataTables_paginate {
+    margin-top: 0.75rem;
+}
+
+/* Dropdown fix */
+.dataTables_length select {
+    padding-right: 1.75rem;
+}
+
+
+/* ================================
+   INPUT STYLE FOR FORMS
+================================ */
+
+.input {
+    @apply w-full border border-gray-300 rounded-lg px-3 py-2
+           focus:outline-none focus:ring-2 focus:ring-blue-500
+           focus:border-blue-500 transition;
+}
