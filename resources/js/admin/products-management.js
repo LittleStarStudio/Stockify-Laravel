@@ -404,6 +404,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const p = JSON.parse(viewBtn.dataset.product);
 
+            const attrBox = document.getElementById("view-attributes");
+            attrBox.innerHTML = "";
+
+            if (p.attribute_values?.length) {
+                p.attribute_values.forEach(a => {
+                    const li = document.createElement("li");
+                    li.innerHTML = `<b>${a.name}</b>: ${a.value}`;
+                    attrBox.appendChild(li);
+                });
+            } else {
+                attrBox.innerHTML = "<li class='text-gray-400'>No attributes</li>";
+            }
+
             document.getElementById("view-name").textContent = p.name;
             document.getElementById("view-sku").textContent = p.sku;
             document.getElementById("view-min-stock").textContent = p.minimum_stock;
@@ -489,7 +502,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (p.attribute_values) {
                 p.attribute_values.forEach(row => {
-                    addAttributeRow(row.attribute_id, row.value, "edit");
+                    addAttributeRow(row.id, row.value, "edit");
                 });
             }
 

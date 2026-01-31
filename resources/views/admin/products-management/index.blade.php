@@ -173,6 +173,15 @@
                                                     "id" => $product->id,
                                                     "category_id" => $product->category_id,
                                                     "supplier_id" => $product->supplier_id,
+
+                                                    "category" => $product->category
+                                                        ? ["id"=>$product->category->id, "name"=>$product->category->name]
+                                                        : null,
+
+                                                    "supplier" => $product->supplier
+                                                        ? ["id"=>$product->supplier->id, "name"=>$product->supplier->name]
+                                                        : null,
+
                                                     "name" => $product->name,
                                                     "sku" => $product->sku,
                                                     "description" => $product->description,
@@ -181,11 +190,10 @@
                                                     "image" => $product->image,
                                                     "minimum_stock" => $product->minimum_stock,
                                                     "is_active" => $product->is_active,
-                                                    "created_at" => $product->created_at?->format('d M Y H:i'),
-                                                    "updated_at" => $product->updated_at?->format('d M Y H:i'),
-                                                    
+
                                                     "attribute_values" => $product->attributeValues->map(fn($v) => [
-                                                        "attribute_id" => (int)$v->attribute_id,
+                                                        "id"    => (int)$v->attribute_id,
+                                                        "name"  => $v->attribute->name,
                                                         "value" => (string)$v->value
                                                     ])->values(),
                                                 ];

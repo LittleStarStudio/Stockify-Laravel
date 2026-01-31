@@ -43,17 +43,29 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-                    <!-- IMAGE PREVIEW -->
-                    <div class="flex flex-col items-center justify-start space-y-3">
-                        <div class="w-40 h-40 border rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
-                            <img id="view-image"
-                                 src=""
-                                 alt="Product Image"
-                                 class="w-full h-full object-cover hidden">
-                            <span id="view-image-placeholder"
-                                  class="text-gray-400 text-sm">
-                                No Image
-                            </span>
+                    <div>
+                        <!-- IMAGE PREVIEW -->
+                        <div class="flex flex-col items-center justify-start space-y-3">
+
+                            <div class="w-40 h-40 border rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
+                                <img id="view-image"
+                                    src=""
+                                    alt="Product Image"
+                                    class="w-full h-full object-cover hidden">
+                                <span id="view-image-placeholder"
+                                    class="text-gray-400 text-sm">
+                                    No Image
+                                </span>
+                            </div>
+                            
+                        </div>
+
+                        <!-- ATTRIBUTES VIEW -->
+                        <div class="w-full border rounded-lg p-3 bg-white shadow-sm mt-3">
+                            <p class="text-sm text-gray-500 text-center mb-2">
+                                Attributes
+                            </p>
+                            <ul id="view-attributes" class="text-sm text-gray-700 bg-gray-100 border rounded-md p-2 space-y-1"></ul>
                         </div>
                     </div>
 

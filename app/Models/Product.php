@@ -67,6 +67,10 @@ class Product extends Model
         return $this->hasMany(ProductAttributeValue::class);
     }
 
+    public function opnameItems()
+    {
+        return $this->hasMany(StockOpnameItem::class);
+    }
 
     
 }

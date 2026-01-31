@@ -12,7 +12,7 @@
             lengthChange: false,
             responsive: true,
             order: [],
-            columnDefs: @json($columnDefs),
+            columnDefs: @json($columnDefs ?? []),
             language: {
                 search: "Search:",
                 info: "Showing _START_ - _END_ of _TOTAL_ data",

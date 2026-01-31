@@ -16,14 +16,6 @@
 
             <!-- Header -->
             <div class="bg-gradient-to-r from-sky-400 to-sky-500 px-8 py-6 text-center">
-                <div class="flex items-center justify-center mb-3">
-                    <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center">
-                        <svg class="w-7 h-7 text-sky-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <path stroke="currentColor" stroke-linejoin="round" stroke-width="2"
-                                  d="M10 12v1h4v-1m4 7H6a1 1 0 0 1-1-1V9h14v9a1 1 0 0 1-1 1ZM4 5h16a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"/>
-                        </svg>
-                    </div>
-                </div>
                 <h1 class="text-2xl font-bold text-white">Stockify</h1>
                 <p class="text-sky-100 text-sm mt-1">Warehouse Inventory Management</p>
             </div>

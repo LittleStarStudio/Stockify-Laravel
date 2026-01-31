@@ -81,5 +81,17 @@ class User extends Authenticatable
         return asset('images/avatar-default.png');
     }
 
+    // RELATION TABLES
+    public function stockOpnames()
+    {
+        return $this->hasMany(StockOpname::class, 'staff_id');
+    }
+
+    public function approvedOpnames()
+    {
+        return $this->hasMany(StockOpname::class, 'manager_id');
+    }
+
+
 
 }

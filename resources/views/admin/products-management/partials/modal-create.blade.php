@@ -29,42 +29,59 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-                        <!-- IMAGE PREVIEW -->
-                        <div class="flex flex-col items-center space-y-3">
+                        <!-- IMAGE + ATTRIBUTES -->
+                        <div class="flex flex-col space-y-4">
 
-                            <div class="w-40 h-40 border rounded-lg overflow-hidden bg-gray-100
-                                        flex items-center justify-center">
+                            <!-- IMAGE -->
+                            <div class="flex flex-col items-center space-y-3">
+                                <div class="w-40 h-40 border rounded-lg overflow-hidden bg-gray-100
+                                            flex items-center justify-center">
+                                    <img id="create-image-preview"
+                                        src="{{ asset('images/product-placeholder.png') }}"
+                                        class="w-full h-full object-cover hidden">
+                                    <span id="create-image-placeholder" class="text-gray-400 text-sm">
+                                        No Image
+                                    </span>
+                                </div>
 
-                                <img id="create-image-preview"
-                                     data-preview
-                                     src="{{ asset('images/product-placeholder.png') }}"
-                                     class="w-full h-full object-cover hidden">
-
-                                <span id="create-image-placeholder"
-                                      class="text-gray-400 text-sm">
-                                    No Image
-                                </span>
+                                <label class="flex items-center gap-3 px-3 py-2
+                                            border border-gray-300 rounded-lg
+                                            cursor-pointer hover:bg-gray-50">
+                                    <span class="px-3 py-1 bg-gray-100 rounded text-sm">
+                                        Choose File
+                                    </span>
+                                    <span id="create-image-filename" class="text-sm text-gray-500">
+                                        No file chosen
+                                    </span>
+                                    <input id="create-image" type="file" name="image" class="hidden">
+                                </label>
                             </div>
 
-                            <!-- FILE PICKER -->
-                            <label class="flex items-center gap-3 px-3 py-2
-                                          border border-gray-300 rounded-lg
-                                          cursor-pointer hover:bg-gray-50">
+                            <!-- ATTRIBUTES (PINDAH KE SINI) -->
+                            <div>
 
-                                <span class="px-3 py-1 bg-gray-100 rounded text-sm">
-                                    Choose File
-                                </span>
+                                <div id="attr-wrapper-create" class="space-y-2 mt-2">
+                                    <div class="flex gap-2">
+                                        <select name="attributes[0][id]" class="input w-1/2">
+                                            <option value="">-- Attribute --</option>
+                                            @foreach($attributes as $a)
+                                                <option value="{{ $a->id }}">{{ $a->name }}</option>
+                                            @endforeach
+                                        </select>
 
-                                <span id="create-image-filename"
-                                      class="text-sm text-gray-500">
-                                    No file chosen
-                                </span>
+                                        <input type="text"
+                                            name="attributes[0][value]"
+                                            placeholder="Value"
+                                            class="input w-1/2">
+                                    </div>
+                                </div>
 
-                                <input id="create-image"
-                                       type="file"
-                                       name="image"
-                                       class="hidden">
-                            </label>
+                                <button type="button"
+                                        id="btnAddAttr"
+                                        class="mt-2 text-blue-600 text-sm hover:underline">
+                                    + Add Attribute
+                                </button>
+                            </div>
 
                         </div>
 
@@ -126,33 +143,6 @@
                                     <input type="hidden" name="selling_price" id="create-harga-jual">
                                 </div>
 
-                            </div>
-
-                            <!-- ATTRIBUTES -->
-                            <div>
-                                <label class="text-sm text-gray-500">Attributes</label>
-
-                                <div id="attr-wrapper-create" class="space-y-2 mt-2">
-                                    <div class="flex gap-2">
-                                        <select name="attributes[0][id]" class="input w-1/2">
-                                            <option value="">-- Attribute --</option>
-                                            @foreach($attributes as $a)
-                                                <option value="{{ $a->id }}">{{ $a->name }}</option>
-                                            @endforeach
-                                        </select>
-
-                                        <input type="text"
-                                            name="attributes[0][value]"
-                                            placeholder="Value"
-                                            class="input w-1/2">
-                                    </div>
-                                </div>
-
-                                <button type="button"
-                                        id="btnAddAttr"
-                                        class="mt-2 text-blue-600 text-sm hover:underline">
-                                    + Add Attribute
-                                </button>
                             </div>
 
                             <!-- DESCRIPTION -->

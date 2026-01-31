@@ -20,7 +20,9 @@ class StockRequestController extends Controller
     public function approve($id)
     {
         $tx = StockTransaction::findOrFail($id);
+
         $tx->status = $tx->type === 'IN' ? 'RECEIVED' : 'ISSUED';
+        $tx->approved_by = auth()->id();
         $tx->save();
 
         return back()->with('success','Stock request approved.');
@@ -29,9 +31,12 @@ class StockRequestController extends Controller
     public function reject($id)
     {
         $tx = StockTransaction::findOrFail($id);
+
         $tx->status = 'REJECTED';
+        $tx->approved_by = auth()->id();
         $tx->save();
 
         return back()->with('success','Stock request rejected.');
     }
+
 }

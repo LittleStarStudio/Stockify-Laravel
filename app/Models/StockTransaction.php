@@ -12,11 +12,15 @@ class StockTransaction extends Model
     protected $fillable = [
         'product_id',
         'user_id',
+        'approved_by',
         'type',
         'quantity',
         'date',
         'status',
-        'notes'
+        'notes',
+        'system_stock',
+        'physical_stock',
+        'source',
     ];
 
     public function product()
@@ -28,4 +32,10 @@ class StockTransaction extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function approver()
+    {
+        return $this->belongsTo(User::class, 'approved_by');
+    }
+
 }

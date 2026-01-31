@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\StockOpname;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ProfileController;
@@ -12,6 +13,11 @@ use App\Http\Controllers\Admin\ProductAttributeController;
 use App\Http\Controllers\Admin\StockInputController;
 use App\Http\Controllers\Admin\StockRequestController;
 use App\Http\Controllers\Admin\StockManagementController;
+use App\Http\Controllers\Admin\StockOpnameController;
+use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\GlobalSearchController;
+use App\Http\Controllers\DashboardController;
 
 use App\Models\Product;
 
@@ -27,9 +33,18 @@ Route::get('/', function () {
 });
 
 // DASHBOARD
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'approved'])->name('dashboard');
+Route::middleware(['auth','approved'])->group(function () {
+
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->name('dashboard');
+
+    Route::prefix('dashboard')->name('dashboard.')->group(function () {
+        Route::get('/admin',   [DashboardController::class, 'admin'])->middleware('role:admin')->name('admin');
+        Route::get('/manager', [DashboardController::class, 'manager'])->middleware('role:manajer_gudang')->name('manager');
+        Route::get('/staff',   [DashboardController::class, 'staff'])->middleware('role:staff_gudang')->name('staff');
+    });
+
+});
 
 // PROFILE (Breeze)
 Route::middleware('auth')->group(function () {
@@ -185,5 +200,111 @@ Route::middleware(['auth', 'approved'])
                 Route::get('stocks-management', 'index')->name('stocks-management.index');
             });
 
+        // STOCK OPNAME
+        Route::middleware('role:admin,manajer_gudang,staff_gudang')
+            ->controller(StockOpnameController::class)
+            ->group(function () {
+
+                Route::get('stocks-opname', 'index')->name('stocks-opname.index');
+
+                Route::get('stocks-opname/{id}/json', function($id) {
+                    return StockOpname::with('items.product.category')->findOrFail($id);
+                });
+
+                // submit
+                Route::post('stocks-opname/submit', 'submitFromClient')
+                    ->name('stocks-opname.submit');
+
+                // update
+                Route::put('stocks-opname/{id}', 'update');
+
+                // delete
+                Route::delete('stocks-opname/{id}', 'destroy')->name('stocks-opname.destroy');
+
+                // approve & reject (MANAGER/ADMIN)
+                Route::post('stocks-opname/{opname}/approve', 'approve')
+                    ->name('stocks-opname.approve');
+
+                Route::post('stocks-opname/{opname}/reject', 'reject')
+                    ->name('stocks-opname.reject');
+
+                // change status (MANAGER)
+                Route::post('stocks-opname/{opname}/change-status', 'changeStatus')
+                    ->name('stocks-opname.change-status');
+
+                // ajax system stock
+                Route::get('opname/products/{id}', function ($id) {
+                    $p = Product::findOrFail($id);
+                    return response()->json([
+                        'stock' => $p->current_stock,
+                        'category' => $p->category?->name,
+                    ]);
+                });
+
+                Route::post('stocks-opname/{id}/change-status', function(Request $request, $id){
+                    $opname = StockOpname::findOrFail($id);
+                    $opname->status = $request->status;
+                    $opname->manager_id = auth()->id();
+                    $opname->save();
+
+                    return response()->json(['success'=>true]);
+                });
+
+            });
+
+        // REPORT 
+        // ALL REPORT (EXCEPT; USERS)
+        Route::middleware('role:admin,manajer_gudang,staff_gudang')
+            ->prefix('reports')
+            ->controller(ReportController::class)
+            ->group(function () {
+
+                // pages
+                Route::get('products', 'products')
+                    ->name('reports.products');
+
+                Route::get('transactions', 'transactionsPage')
+                    ->name('reports.transactions');
+
+                Route::get('opnames', 'opnames')
+                    ->name('reports.opnames');
+
+                // export
+                Route::get('products/export', 'productsExport')
+                    ->name('reports.products.export');
+
+                Route::get('transactions/export', 'transactionsExport')
+                    ->name('reports.transactions.export');
+
+                Route::get('opnames/export', 'opnamesExport')
+                    ->name('reports.opnames.export');
+            });
+
+        // USER REPORT (ADMIN ONLY)
+        Route::middleware('admin')
+            ->prefix('reports')
+            ->controller(ReportController::class)
+            ->group(function () {
+
+                Route::get('users', 'users')
+                    ->name('reports.users');
+
+                Route::get('users/export', 'usersExport')
+                    ->name('reports.users.export');
+            });
+
+        // SETTINGS
+        Route::middleware('role:admin,manajer_gudang,staff_gudang')
+            ->controller(SettingController::class)
+            ->group(function () {
+
+                Route::get('/settings', 'index')->name('settings.index');
+                Route::post('/settings', 'update')->name('settings.update');
+            });
+
+        
+        // SEARCH GLOBAL
+        Route::get('/search', [GlobalSearchController::class, 'index'])
+            ->name('global.search');
 
     });

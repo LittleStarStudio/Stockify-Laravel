@@ -54,9 +54,9 @@ class ProductController extends Controller
 
         if ($request->filled('attributes')) {
 
-            $clean = collect($request->attributes)
-                    ->unique('id')
-                    ->filter(fn($r) => !empty($r['id']) && !empty($r['value']));
+            $clean = collect($request->input('attributes'))
+                ->unique('id')
+                ->filter(fn($r) => !empty($r['id']) && !empty($r['value']));
 
             foreach ($clean as $row) {
                 $product->attributeValues()->create([
@@ -87,9 +87,9 @@ class ProductController extends Controller
 
         if ($request->filled('attributes')) {
 
-            $clean = collect($request->attributes)
-                    ->unique('id')
-                    ->filter(fn($r) => !empty($r['id']) && !empty($r['value']));
+            $clean = collect($request->input('attributes'))
+                ->unique('id')
+                ->filter(fn($r) => !empty($r['id']) && !empty($r['value']));
 
             foreach ($clean as $row) {
                 $product->attributeValues()->create([
